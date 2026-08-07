@@ -1,1 +1,0 @@
-Binary walk sprite is added by git tree commit.
