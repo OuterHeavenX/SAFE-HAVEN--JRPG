@@ -1,35 +1,48 @@
-/* SafeHaven mobile menu layout hotfix: presentation only. */
-/* Cover the canvas-side list cleanly so the direct-touch list is the single visible interaction surface. */
+/* SafeHaven menu alignment hotfix — presentation only. */
+/* All percentages now resolve against the rendered 960x540 game canvas via touch-canvas-anchor-v1.js. */
 .dt-job-list{
-  left:9.75% !important;
-  top:15.1% !important;
-  width:35.5% !important;
-  height:70.5% !important;
+  left:10% !important;
+  top:12.6% !important;
+  width:34.4% !important;
+  height:75.9% !important;
   box-sizing:border-box;
   overflow-y:auto;
   overflow-x:hidden;
   padding:42px 18px 16px !important;
-  gap:8px !important;
-  background:linear-gradient(#171a48 0%,#0a0b28 100%) !important;
-  box-shadow:inset 0 0 0 3px #11132f,0 0 0 5px #0a0b28;
+  gap:0 !important;
 }
-.dt-job-list button{flex:0 0 auto;min-height:54px !important;}
+.dt-job-list button{flex:0 0 auto;min-height:66px !important;}
 .dt-job-list button:last-child{margin-bottom:6px;}
 
-/* Match the equipment touch list to the lowered canvas panels after the equipped-header spacing repair. */
 .dt-equip-list{
-  left:10.05% !important;
-  top:41.75% !important;
-  width:36.5% !important;
-  height:43.9% !important;
+  left:10% !important;
+  top:37.8% !important;
+  width:37% !important;
+  height:50% !important;
   box-sizing:border-box;
   overflow-y:auto;
   overflow-x:hidden;
-  padding:36px 18px 14px !important;
+  padding:38px 18px 14px !important;
+}
+
+.dt-simple-list{
+  left:10% !important;
+  top:30.5% !important;
+  width:80% !important;
+  height:55.5% !important;
+  box-sizing:border-box;
+  overflow-y:auto;
+  overflow-x:hidden;
+}
+
+.dt-back{
+  right:9.8% !important;
+  bottom:6.5% !important;
 }
 
 @media(max-width:700px){
-  .dt-job-list{top:15.4% !important;height:70.2% !important;padding-top:35px !important;gap:6px !important;}
-  .dt-job-list button{min-height:48px !important;}
-  .dt-equip-list{top:41.6% !important;height:44% !important;padding-top:30px !important;}
+  .dt-job-list{padding-top:34px !important;}
+  .dt-job-list button{min-height:54px !important;}
+  .dt-equip-list{padding-top:31px !important;}
+  .dt-simple-list{top:30% !important;height:56% !important;}
 }
