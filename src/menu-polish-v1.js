@@ -2,7 +2,7 @@
 (()=>{
 const g=window.__safehavenGame,canvas=document.getElementById('game');
 if(!g||!canvas)return;
-const ctx=canvas.getContext('2d'),TAU=Math.PI*2;
+const ctx=canvas.getContext('2d');
 const C={gold:'#ecd27a',cream:'#fff0ce',muted:'#a8a4b8',green:'#7fdb8c',red:'#ef777d',blue:'#80b9ea',gray:'#777889',dark:'#0b0d25'};
 function text(t,x,y,s=16,c=C.cream,a='left'){ctx.save();ctx.font=`${s}px Georgia,serif`;ctx.textAlign=a;ctx.textBaseline='middle';ctx.fillStyle='rgba(0,0,0,.55)';ctx.fillText(String(t),x+1,y+2);ctx.fillStyle=c;ctx.fillText(String(t),x,y);ctx.restore();}
 function panel(x,y,w,h,title){const q=ctx.createLinearGradient(x,y,x,y+h);q.addColorStop(0,'rgba(25,28,70,.98)');q.addColorStop(1,'rgba(7,9,29,.98)');ctx.fillStyle=q;ctx.fillRect(x,y,w,h);ctx.strokeStyle='#111229';ctx.lineWidth=6;ctx.strokeRect(x+3,y+3,w-6,h-6);ctx.strokeStyle=C.gold;ctx.lineWidth=2;ctx.strokeRect(x+8,y+8,w-16,h-16);if(title)text(title,x+20,y+27,17,C.gold);}
@@ -22,19 +22,19 @@ const JOBS=[
 ];
 function drawEquipment(){
  panel(70,30,820,480,'EQUIPMENT');
- panel(96,66,768,112,'CURRENTLY EQUIPPED');
+ panel(96,66,768,126,'CURRENTLY EQUIPPED');
  const slots=[['Weapon','weapon'],['Shield','shield'],['Head','head'],['Body','body'],['Accessory','accessory']];
- slots.forEach(([lab,sl],i)=>{const col=i<3?0:1,row=i<3?i:i-3,x=120+col*370,y=122+row*22;text(lab+':',x,y,13,C.muted);text(eqName(g.s.player.equipment[sl]),x+76,y,14,C.cream)});
- panel(96,190,355,284,'OWNED GEAR'); panel(465,190,399,284,'STAT PREVIEW');
- const list=ownedEquipment(); if(!list.length){text('No equipment owned yet.',126,245,16,C.muted);return;}
+ slots.forEach(([lab,sl],i)=>{const col=i<3?0:1,row=i<3?i:i-3,x=120+col*370,y=122+row*24;text(lab+':',x,y,13,C.muted);text(eqName(g.s.player.equipment[sl]),x+76,y,14,C.cream)});
+ panel(96,204,355,270,'OWNED GEAR'); panel(465,204,399,270,'STAT PREVIEW');
+ const list=ownedEquipment(); if(!list.length){text('No equipment owned yet.',126,259,16,C.muted);return;}
  g.menu.index=Math.max(0,Math.min(g.menu.index,list.length-1));
- list.slice(0,8).forEach((id,i)=>{const o=item(id),y=238+i*28;if(i===g.menu.index)diamond(121,y);const equipped=g.s.player.equipment[o.slot]===id;text(o.name,140,y,15,equipped?C.gold:C.cream);if(equipped)text('EQUIPPED',421,y,10,C.gold,'right')});
+ list.slice(0,8).forEach((id,i)=>{const o=item(id),y=252+i*27;if(i===g.menu.index)diamond(121,y);const equipped=g.s.player.equipment[o.slot]===id;text(o.name,140,y,15,equipped?C.gold:C.cream);if(equipped)text('EQUIPPED',421,y,10,C.gold,'right')});
  const id=list[g.menu.index],o=item(id),curId=g.s.player.equipment[o.slot],cur=item(curId)||{};const now=g.stats(),next=projected(o);
- text(o.name,490,234,20,C.gold);text(`${o.slot.toUpperCase()}  •  comparing with ${eqName(curId)}`,490,260,12,C.muted);
- diffText('Attack',now.attack,next.attack,490,305);diffText('Defense',now.defense,next.defense,490,340);diffText('Agility',now.agi,next.agi,490,375);
+ text(o.name,490,248,20,C.gold);text(`${o.slot.toUpperCase()}  •  comparing with ${eqName(curId)}`,490,274,12,C.muted);
+ diffText('Attack',now.attack,next.attack,490,319);diffText('Defense',now.defense,next.defense,490,354);diffText('Agility',now.agi,next.agi,490,389);
  const deltas=[(o.atk||0)-(cur.atk||0),(o.def||0)-(cur.def||0),(o.agi||0)-(cur.agi||0)];
- const better=deltas.some(v=>v>0),worse=deltas.some(v=>v<0);text(better&&!worse?'▲ UPGRADE':worse&&!better?'▼ DOWNGRADE':better&&worse?'◆ TRADE-OFF':'◆ SIDEGRADE',490,421,16,better&&!worse?C.green:worse&&!better?C.red:C.gold);
- text('Tap gear to compare/equip',816,449,12,C.muted,'right');
+ const better=deltas.some(v=>v>0),worse=deltas.some(v=>v<0);text(better&&!worse?'▲ UPGRADE':worse&&!better?'▼ DOWNGRADE':better&&worse?'◆ TRADE-OFF':'◆ SIDEGRADE',490,431,16,better&&!worse?C.green:worse&&!better?C.red:C.gold);
+ text('Tap gear to compare/equip',816,451,12,C.muted,'right');
 }
 function drawStatus(){
  const p=g.s.player,st=g.stats(),need=Math.max(0,p.nextXp-p.xp);panel(90,34,780,472,'STATUS');
@@ -48,9 +48,10 @@ function drawStatus(){
  text(`Luck ${p.luck}   •   Vitality ${p.vit}`,453,432,14,C.muted);
 }
 function drawJobs(){
- const p=g.s.player;panel(70,30,820,480,'JOBS');panel(96,68,330,410,'VOCATIONS');panel(440,68,424,410,'JOB DETAILS');
+ const p=g.s.player;panel(70,30,820,480,'JOBS');
+ ctx.save();ctx.fillStyle='rgba(8,10,32,.96)';ctx.fillRect(96,68,330,410);ctx.restore();
+ panel(440,68,424,410,'JOB DETAILS');
  g.menu.index=Math.max(0,Math.min(g.menu.index,JOBS.length-1));
- JOBS.forEach((j,i)=>{const unlocked=j.unlock(),active=p.job===j.id,y=126+i*68;if(i===g.menu.index)diamond(121,y,unlocked?C.gold:'#777889');text(j.name,142,y,18,unlocked?(active?C.gold:C.cream):C.gray);text(unlocked?(active?'CURRENT JOB':'Unlocked'):'LOCKED',142,y+24,12,unlocked?C.green:C.gray)});
  const j=JOBS[g.menu.index],unlocked=j.unlock();text(j.name.toUpperCase(),468,116,22,unlocked?C.gold:C.gray);text(unlocked?(p.job===j.id?'Currently equipped vocation':'Ready to change job'):'Unlock condition:',468,146,13,unlocked?C.muted:C.gray);if(!unlocked)text(j.cond,468,170,14,'#aaa8b5');
  text('PROS',468,216,14,C.green);j.pros.forEach((x,i)=>text('＋ '+x,468,244+i*27,15,unlocked?C.green:C.gray));text('CONS',468,316,14,C.red);j.cons.forEach((x,i)=>text('− '+x,468,344+i*27,15,unlocked?C.red:C.gray));
  const dat=SH.DATA.jobs[j.id];if(dat?.abilities?.length){text('ABILITIES',660,216,14,C.gold);dat.abilities.slice(0,3).forEach((a,i)=>text(`${a[0]}  (${a[1]} JP)`,660,244+i*27,13,unlocked?C.cream:C.gray));}
