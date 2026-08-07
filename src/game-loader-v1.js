@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-1618',false);
+  xhr.open('GET','src/game.js?v=20260807-1554',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -48,15 +48,14 @@
     "const pvx=Number.isFinite(window.KaelVisualX)?window.KaelVisualX:this.s.x,pvy=Number.isFinite(window.KaelVisualY)?window.KaelVisualY:this.s.y;const playerX=ox+pvx*tw,playerY=oy+pvy*tw;person(playerX,playerY,'kael',Math.floor(this.anim*4),this.s.map==='home'?1.4:1.25);"
   );
 
-  // Battle Kael is rendered exactly once by presentation-v1.js using the Level 01 art.
   source=source.replace("person(745,240,'kael',Math.floor(this.anim*4),1.7);","");
 
-  // Direct-touch battle actions are authoritative. Remove the old canvas command
-  // panel/list so Attack, Magic, Item, Defend, and Flee are not rendered twice.
-  source=source.replace(
-    "panel(525,340,410,176,'COMMAND');['Attack','Magic','Item','Defend','Flee'].forEach((x,i)=>{if(i===this.battle.menu)diamond(559,385+i*25);txt(x,582,391+i*25,17,i===this.battle.menu?'#ffe99b':'#f6edd8')});",
-    ""
-  );
+  // The HTML touch battle controls are authoritative. Strip the canvas command UI
+  // from drawBattle with a regex so whitespace/minor source changes cannot leave it behind.
+  source=source.replace(/panel\(525,340,410,176,'COMMAND'\);\['Attack','Magic','Item','Defend','Flee'\]\.forEach\(\(x,i\)=>\{[^}]*\}\);/g,'');
+  if(source.includes("panel(525,340,410,176,'COMMAND')")){
+    console.warn('SafeHaven: legacy battle command panel was not removed.');
+  }
 
   source=source.replace(/new Game\(\);\s*\}\)\(\);?\s*$/,'window.__safehavenGame=new Game();\n})();');
   (0,eval)(source+'\n//# sourceURL=src/game.js');
