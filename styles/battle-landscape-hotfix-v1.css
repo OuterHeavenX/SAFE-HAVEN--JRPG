@@ -1,0 +1,46 @@
+/* SafeHaven surgical landscape battle layout polish. */
+#direct-touch-ui .dt-battle{
+  left:auto;
+  right:max(3.5%, env(safe-area-inset-right));
+  top:52%;
+  bottom:auto;
+  width:32%;
+  max-width:390px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  padding:0;
+}
+#direct-touch-ui .dt-battle button{
+  min-height:48px;
+  font-size:16px;
+  line-height:1;
+  padding:8px 10px;
+}
+#direct-touch-ui .dt-battle button:nth-child(5){
+  grid-column:1/-1;
+  min-height:44px;
+}
+@media (max-height:500px) and (orientation:landscape){
+  #direct-touch-ui .dt-battle{
+    top:49%;
+    right:max(3%, env(safe-area-inset-right));
+    width:34%;
+    gap:5px;
+  }
+  #direct-touch-ui .dt-battle button{
+    min-height:44px;
+    font-size:14px;
+    padding:6px 8px;
+  }
+  #direct-touch-ui .dt-battle button:nth-child(5){min-height:40px;}
+}
+@media (max-width:700px) and (orientation:landscape){
+  #direct-touch-ui .dt-battle{
+    top:48%;
+    right:max(2.5%, env(safe-area-inset-right));
+    width:36%;
+  }
+  #direct-touch-ui .dt-battle button{min-height:42px;font-size:13px;}
+  #direct-touch-ui .dt-battle button:nth-child(5){min-height:38px;}
+}
