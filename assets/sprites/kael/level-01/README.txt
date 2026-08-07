@@ -1,0 +1,1 @@
+Level 01 Kael runtime assets. walk.png is the 6-frame x 4-direction spritesheet (64x64 cells).
