@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-1554',false);
+  xhr.open('GET','src/game.js?v=20260807-classic1',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -49,107 +49,30 @@
   );
 
   source=source.replace("person(745,240,'kael',Math.floor(this.anim*4),1.7);","");
-
-  // The HTML touch battle controls are authoritative. Strip the canvas command UI
-  // from drawBattle with a regex so whitespace/minor source changes cannot leave it behind.
   source=source.replace(/panel\(525,340,410,176,'COMMAND'\);\['Attack','Magic','Item','Defend','Flee'\]\.forEach\(\(x,i\)=>\{[^}]*\}\);/g,'');
-  if(source.includes("panel(525,340,410,176,'COMMAND')")){
-    console.warn('SafeHaven: legacy battle command panel was not removed.');
-  }
+  source=source.replace('LV ${this.s.player.level}  ${SH.DATA.jobs[this.s.player.job].name.toUpperCase()}','${SH.Classic.formatLevel(this.s.player.rank||this.s.player.level)}  KAEL');
+  source=source.replace('`Level ${this.s.player.level}`','SH.Classic.formatLevel(this.s.player.rank||this.s.player.level)');
+  if(source.includes("panel(525,340,410,176,'COMMAND')"))console.warn('SafeHaven: legacy battle command panel was not removed.');
 
   source=source.replace(/new Game\(\);\s*\}\)\(\);?\s*$/,'window.__safehavenGame=new Game();\n})();');
   (0,eval)(source+'\n//# sourceURL=src/game.js');
   if(!window.__safehavenGame)throw new Error('SafeHaven game instance was not exposed.');
 
   window.KaelFacing=window.KaelFacing||'down';
-  window.KaelVisualX=NaN;
-  window.KaelVisualY=NaN;
-  window.KaelVisualMap=null;
-  window.KaelIsMoving=false;
-
+  window.KaelVisualX=NaN;window.KaelVisualY=NaN;window.KaelVisualMap=null;window.KaelIsMoving=false;
   const game=window.__safehavenGame;
   const DIRECTIONS=['up','down','left','right','up-left','up-right','down-left','down-right'];
   const originalInput=game.input.bind(game);
   game.input=function(action){
-    if(DIRECTIONS.includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){
-      const parts=action.split('-');
-      if(parts.length===1)window.KaelFacing=action;
-      else if(!parts.includes(window.KaelFacing))window.KaelFacing=parts[1]||parts[0];
-      if(window.KaelIsMoving)return;
-    }
+    if(DIRECTIONS.includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){const parts=action.split('-');if(parts.length===1)window.KaelFacing=action;else if(!parts.includes(window.KaelFacing))window.KaelFacing=parts[1]||parts[0];if(window.KaelIsMoving)return;}
     return originalInput(action);
   };
-
   const held=new Set();
   const keyToDir={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
-  const resolveHeld=()=>{
-    const up=held.has('up'),down=held.has('down'),left=held.has('left'),right=held.has('right');
-    const v=up&&!down?'up':down&&!up?'down':null;
-    const h=left&&!right?'left':right&&!left?'right':null;
-    return v&&h?`${v}-${h}`:(h||v);
-  };
-  addEventListener('keydown',e=>{
-    const d=keyToDir[e.code];
-    if(!d)return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    held.add(d);
-  },true);
-  addEventListener('keyup',e=>{
-    const d=keyToDir[e.code];
-    if(!d)return;
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    held.delete(d);
-  },true);
+  const resolveHeld=()=>{const up=held.has('up'),down=held.has('down'),left=held.has('left'),right=held.has('right');const v=up&&!down?'up':down&&!up?'down':null,h=left&&!right?'left':right&&!left?'right':null;return v&&h?`${v}-${h}`:(h||v)};
+  addEventListener('keydown',e=>{const d=keyToDir[e.code];if(!d)return;e.preventDefault();e.stopImmediatePropagation();held.add(d)},true);
+  addEventListener('keyup',e=>{const d=keyToDir[e.code];if(!d)return;e.preventDefault();e.stopImmediatePropagation();held.delete(d)},true);
   addEventListener('blur',()=>held.clear());
-
-  const originalLoop=game.loop.bind(game);
-  let lastVisualTime=performance.now();
-  let nextHeldStep=0;
-  game.loop=function(t){
-    const now=Number.isFinite(t)?t:performance.now();
-    const dt=Math.max(0,Math.min(40,now-lastVisualTime));
-    lastVisualTime=now;
-
-    if(this.s&&this.mode==='world'){
-      const map=this.s.map;
-      if(window.KaelVisualMap!==map||!Number.isFinite(window.KaelVisualX)||!Number.isFinite(window.KaelVisualY)){
-        window.KaelVisualMap=map;
-        window.KaelVisualX=this.s.x;
-        window.KaelVisualY=this.s.y;
-        window.KaelIsMoving=false;
-      }else{
-        const dx=this.s.x-window.KaelVisualX;
-        const dy=this.s.y-window.KaelVisualY;
-        const dist=Math.hypot(dx,dy);
-        if(dist>0.001){
-          const maxStep=dt/90;
-          if(dist<=maxStep){
-            window.KaelVisualX=this.s.x;
-            window.KaelVisualY=this.s.y;
-            window.KaelIsMoving=false;
-          }else{
-            window.KaelVisualX+=dx/dist*maxStep;
-            window.KaelVisualY+=dy/dist*maxStep;
-            window.KaelIsMoving=true;
-          }
-        }else{
-          window.KaelVisualX=this.s.x;
-          window.KaelVisualY=this.s.y;
-          window.KaelIsMoving=false;
-        }
-      }
-
-      const heldDir=resolveHeld();
-      if(heldDir&&!window.KaelIsMoving&&now>=nextHeldStep&&!this.dialog&&!this.menu&&!this.shop){
-        this.input(heldDir);
-        nextHeldStep=now+72;
-      }
-    }else{
-      window.KaelIsMoving=false;
-    }
-
-    return originalLoop(now);
-  };
+  const originalLoop=game.loop.bind(game);let lastVisualTime=performance.now(),nextHeldStep=0;
+  game.loop=function(t){const now=Number.isFinite(t)?t:performance.now(),dt=Math.max(0,Math.min(40,now-lastVisualTime));lastVisualTime=now;if(this.s&&this.mode==='world'){const map=this.s.map;if(window.KaelVisualMap!==map||!Number.isFinite(window.KaelVisualX)||!Number.isFinite(window.KaelVisualY)){window.KaelVisualMap=map;window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}else{const dx=this.s.x-window.KaelVisualX,dy=this.s.y-window.KaelVisualY,dist=Math.hypot(dx,dy);if(dist>0.001){const maxStep=dt/90;if(dist<=maxStep){window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}else{window.KaelVisualX+=dx/dist*maxStep;window.KaelVisualY+=dy/dist*maxStep;window.KaelIsMoving=true}}else{window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}}const heldDir=resolveHeld();if(heldDir&&!window.KaelIsMoving&&now>=nextHeldStep&&!this.dialog&&!this.menu&&!this.shop){this.input(heldDir);nextHeldStep=now+72}}else window.KaelIsMoving=false;return originalLoop(now)};
 })();
