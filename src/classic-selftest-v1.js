@@ -7,8 +7,14 @@
  test('level notation Lv 1-9',()=>C.formatLevel(9)==='Lv 1-9');
  test('level notation rolls to Lv 2',()=>C.formatLevel(10)==='Lv 2');
  test('ability registry available',()=>!!C.abilities.fire&&!!C.abilities.cure&&!!C.abilities.powerStrike);
- test('element framework available',()=>C.elementMultiplier({weaknesses:['fire']},'fire')>1&&C.elementMultiplier({immunities:['ice']},'ice')===0);
+ test('weakness multiplier',()=>C.elementMultiplier({weaknesses:['fire']},'fire')>1);
+ test('resistance multiplier',()=>{const m=C.elementMultiplier({resistances:['ice']},'ice');return m>0&&m<1});
+ test('immunity multiplier',()=>C.elementMultiplier({immunities:['ice']},'ice')===0);
+ test('legacy immunity alias',()=>C.elementMultiplier({immune:['holy']},'holy')===0);
+ test('absorption multiplier',()=>C.elementMultiplier({absorb:['dark']},'dark')<0);
  test('save migration defaults',()=>{const x=C.ensureState({player:{name:'Test',level:3,jp:10}});return x.player.rank===3&&x.treasures&&x.hiddenItems&&x.party});
+ test('jp learning spends exactly once',()=>{const x=C.ensureState({player:{name:'Test',rank:2,jp:100,learnedAbilities:{},abilityLoadout:[]}});const a=C.learn(x,'fire'),after=x.player.jp,b=C.learn(x,'fire');return a.ok&&after===60&&!b.ok&&x.player.jp===60});
+ test('loadout maximum is four',()=>{const x=C.ensureState({player:{name:'Test',rank:20,jp:0,learnedAbilities:{focus:true,trailSense:true,secondWind:true,powerStrike:true,fire:true},abilityLoadout:['focus','trailSense','secondWind','powerStrike']}});return C.toggleLoadout(x,'fire')===false&&x.player.abilityLoadout.length===4});
  test('jp remains spendable currency',()=>typeof g.gainJP==='function');
  test('party-ready state',()=>{const x=C.ensureState({player:{name:'Kael',level:1}});return x.party.active[0]==='kael'&&x.party.members.kael});
  test('persistent treasure extension',()=>SH.MAPS.cave.objects.some(o=>o.chest==='classicBladeChest'));
