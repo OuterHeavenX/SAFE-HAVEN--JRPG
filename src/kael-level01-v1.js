@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const img=new Image();
-  const asset={walk:img,idle:img,ready:false,failed:false,frameW:64,frameH:64,cols:6,rows:4,directions:{left:0,right:1,down:2,up:3}};
+  const asset={walk:img,idle:img,ready:false,failed:false,frameW:64,frameH:64,cols:6,rows:4,directions:{left:1,right:2,down:0,up:3}};
   img.onload=()=>{asset.ready=true;asset.failed=false;};
   img.onerror=()=>{asset.failed=true;console.warn('Kael Level 01 walk sprite failed to load.');};
   try{
