@@ -43,7 +43,8 @@ function render(){
   list.innerHTML='';
   for(const s of SH.Save.summaries()){
     const b=document.createElement('button');b.className='load-slot';b.disabled=!!s.empty;
-    b.innerHTML=s.empty?`<strong>${names[s.slot]}</strong><span class="load-meta">EMPTY</span><span></span>`:`<strong>${names[s.slot]}</strong><span class="load-meta">${s.name} · Lv ${s.level} · ${mapName(s.where)}</span><span class="load-play">${playtime(s.playtime)}</span>`;
+    const levelLabel=s.levelLabel||(window.SH?.Classic?SH.Classic.formatLevel(s.level):`Lv ${s.level}`);
+    b.innerHTML=s.empty?`<strong>${names[s.slot]}</strong><span class="load-meta">EMPTY</span><span></span>`:`<strong>${names[s.slot]}</strong><span class="load-meta">${s.name} · ${levelLabel} · ${mapName(s.where)}</span><span class="load-play">${playtime(s.playtime)}</span>`;
     if(!s.empty)b.addEventListener('click',()=>{sessionStorage.setItem('safehaven.loadSlot',s.slot);location.reload();});
     list.appendChild(b);
   }
