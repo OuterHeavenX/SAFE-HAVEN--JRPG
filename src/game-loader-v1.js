@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-1546',false);
+  xhr.open('GET','src/game.js?v=20260807-1608',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -48,6 +48,10 @@
     "const pvx=Number.isFinite(window.KaelVisualX)?window.KaelVisualX:this.s.x,pvy=Number.isFinite(window.KaelVisualY)?window.KaelVisualY:this.s.y;const playerX=ox+pvx*tw,playerY=oy+pvy*tw;person(playerX,playerY,'kael',Math.floor(this.anim*4),this.s.map==='home'?1.4:1.25);"
   );
 
+  // Battle Kael is rendered exactly once by presentation-v1.js using the Level 01 art.
+  // Suppress the legacy/core battle draw to prevent a duplicate block Kael underneath.
+  source=source.replace("person(745,240,'kael',Math.floor(this.anim*4),1.7);","");
+
   source=source.replace(/new Game\(\);\s*\}\)\(\);?\s*$/,'window.__safehavenGame=new Game();\n})();');
   (0,eval)(source+'\n//# sourceURL=src/game.js');
   if(!window.__safehavenGame)throw new Error('SafeHaven game instance was not exposed.');
@@ -71,7 +75,6 @@
     return originalInput(action);
   };
 
-  // True keyboard diagonals: held cardinal keys combine into one 8-way action.
   const held=new Set();
   const keyToDir={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
   const resolveHeld=()=>{
