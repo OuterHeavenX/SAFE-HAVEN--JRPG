@@ -50,6 +50,7 @@
 
   source=source.replace("person(745,240,'kael',Math.floor(this.anim*4),1.7);","");
   source=source.replace(/panel\(525,340,410,176,'COMMAND'\);\['Attack','Magic','Item','Defend','Flee'\]\.forEach\(\(x,i\)=>\{[^}]*\}\);/g,'');
+  source=source.replace("panel(20,440,470,76);txt(`KAEL   HP ${this.s.player.hp}/${this.s.player.maxHp}   MP ${this.s.player.mp}/${this.s.player.maxMp}`,38,477,16);","panel(20,414,455,64);txt(`KAEL   HP ${this.s.player.hp}/${this.s.player.maxHp}   MP ${this.s.player.mp}/${this.s.player.maxMp}`,38,451,16);");
   source=source.replace('LV ${this.s.player.level}  ${SH.DATA.jobs[this.s.player.job].name.toUpperCase()}','${SH.Classic.formatLevel(this.s.player.rank||this.s.player.level)}  KAEL');
   source=source.replace('`Level ${this.s.player.level}`','SH.Classic.formatLevel(this.s.player.rank||this.s.player.level)');
   if(source.includes("panel(525,340,410,176,'COMMAND')"))console.warn('SafeHaven: legacy battle command panel was not removed.');
