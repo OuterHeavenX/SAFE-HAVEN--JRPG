@@ -1,1 +1,19 @@
-'use strict';(()=>{const img=new Image();const asset={idle:img,ready:false,failed:false,frameW:64,frameH:64,cols:1,rows:1};img.onload=()=>{asset.ready=true;};img.onerror=()=>{asset.failed=true;console.warn('Kael sprite failed to load');};img.src='data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAADZElEQVR42u2aS2gTURSGv9HQSlWiYhpNoyWklKqJD6Sx+GhRKRVFqoUu2o1UMOqiuNCNdO1OUOzCB1XQhVlkpYvgA4UqiliEylQskqQUmzQPGSKtorUwLspMM3Gl6C1O7oFA5s6F5P/Of07OXKLous7fCkVR+N9iEWUeEoAEIAFIABKABCABSAASgAQgAUgAEoAEIAFIAGUXjoX4UJ/HazmHG0tPKGXlAENwuKOHtsZmfB6vXgpFVCiiDkVLBbY1Nlvup3J5RsbfC3eDQ5Tdwx095tr4x8Qv+2qqXcZbXSQEoQ6oqqhkz5YdpHL5UtEL5gQhPcDn8erhjh6L+J3bm0zBtev8lv2B2g2I6gmLRIkf/5gglcuTnEyyc3sTL9+8MmEUZx9Am9Ls0QSLs1hVUQlgukCb0ihMF1ixbAWrlq+iptplAZDWskLK4J86YCw9oRivjcsVM8vJySSF6QKxK4coTBfQprQFyf6CDELJySTn20MAJEY+z9e9ezHP4nl7D0L94d2cbw/ROxChdyBCOjtDf3g3hekCp47X01znsjcAf8CJx11BfcslNh8boXcgAkDsyiHLPlH1L7wEXGsqACdLJlrpP7uaT95jZik8fp0lnoiT1r4JnQaFAshnZgC4c+AGvANnwGkRH1Xjim1LIKrGlXN9McuaIb415KZ9XyOdwTrhD0RCHRBV4wp9Mb3OX2eubapdiT/gBD6Xz+PwqeP1tIbctIbcAFy79QF/wMnprl3CXSAUQGfQpxvNcC7rcxFPxHn+JG9vB3QGffrhvQ2MOiq5PLjEXL/3dIjbN4+wZ7+Lq5EXwhuhQ5T43pNNvH2TYe3XWYYi9xkq+gL5zIxlKrTViZAhvv/6KwBGHVV0dR/Fs2Yp6cwXshmN9KNH803STgCMmgdQZ9d3AwQdqbu56rW0HWjh4YNBtm4NMjysomkaP76t7gYYfT8Y+e97QGfQp0fVMSWqjimGeCNOBLw8fDBIdW6S4WGVO2e20TD73bzfsKGlyzYlUCwm6EjdPd21a27ez85w7+kQFy8cNPee64uhztaYsEQ4QSgAA8J8WdR0l14X7xUBQPh5QKnI0mvbzQF/mkVRjVDIIPS7YkT+Cijy7/JlHhKABCABSAASgAQgAUgAEoAEIAFIABKABFCG8ROD8IPYc9yeigAAAABJRU5ErkJggg==';window.KaelLevel01=asset;})();
+'use strict';
+(()=>{
+  const img=new Image();
+  const asset={walk:img,idle:img,ready:false,failed:false,frameW:64,frameH:64,cols:6,rows:4,directions:{left:0,right:1,down:2,up:3}};
+  img.onload=()=>{asset.ready=true;asset.failed=false;};
+  img.onerror=()=>{asset.failed=true;console.warn('Kael Level 01 walk sprite failed to load.');};
+  try{
+    const xhr=new XMLHttpRequest();
+    xhr.open('GET','assets/sprites/kael/level-01/walk-base64.txt?v=20260807-1450',false);
+    xhr.send(null);
+    if(xhr.status>=200&&xhr.status<300){
+      img.src='data:image/png;base64,'+xhr.responseText.trim();
+    }else{
+      asset.failed=true;
+      console.warn('Kael Level 01 sprite payload unavailable:',xhr.status);
+    }
+  }catch(error){asset.failed=true;console.warn('Kael Level 01 sprite payload error.',error);}
+  window.KaelLevel01=asset;
+})();
