@@ -1,0 +1,15 @@
+'use strict';
+(()=>{
+ const C=SH.Classic,g=window.__safehavenGame;if(!C||!g)return;C.ensureState(g.s);
+ const mark=(map,label,key,reward)=>{const o=(SH.MAPS[map]?.objects||[]).find(x=>x.label===label&&!x.__classicMarked);if(o){o.__classicMarked=true;o.hiddenFind={key,reward}}};
+ mark('home','BOOKS','home-books-cache',{item:'antidote',qty:1});
+ mark('town','WELL','eldenbrook-well-coins',{gold:35});
+ const oldInteract=g.interact.bind(g),oldChest=g.chest.bind(g),oldNpc=g.npc.bind(g);
+ const grant=(r)=>{if(r.gold){g.s.gold+=r.gold;return `${r.gold} Gold`}if(r.item){g.addItem(r.item,r.qty||1);return `${SH.DATA.items[r.item]?.name||r.item} ×${r.qty||1}`}return 'something useful'};
+ g.interact=function(){C.ensureState(this.s);const o=this.nearObject();if(o?.hiddenFind){const h=o.hiddenFind;if(!this.s.hiddenItems[h.key]){this.s.hiddenItems[h.key]=true;const got=grant(h.reward);SH.Save.autosave(this.s);this.dialog=`Hidden find! Obtained ${got}.`;window.SHClassicFX={type:'itemFound',at:performance.now()};return}}
+   if(o?.inn){window.SHClassicPrompt={type:'inn',title:'ELDENBROOK INN',text:'A room is 20 Gold. Stay the night?',yes:()=>{if(this.s.gold<20){this.dialog='Innkeeper: “You do not have enough Gold.”';return}this.s.gold-=20;this.s.player.hp=this.s.player.maxHp;this.s.player.mp=this.s.player.maxMp;SH.Save.autosave(this.s);window.SHClassicTransition={type:'inn',at:performance.now()};this.dialog='Morning comes softly. HP and MP fully restored.';},no:()=>{this.dialog='Innkeeper: “Safe travels.”'}};return}
+   return oldInteract();};
+ g.chest=function(o){C.ensureState(this.s);const key=o.chest;if(this.s.treasures[key]||this.s.opened[key]){this.s.treasures[key]=true;return this.dialog='The chest is empty.'}this.s.treasures[key]=true;this.s.opened[key]=true;const item=o.item||'potion';this.addItem(item,1);SH.Save.autosave(this.s);this.dialog=`TREASURE! Obtained ${SH.DATA.items[item]?.name||SH.DATA.weapons[item]?.name||item} ×1!`;window.SHClassicFX={type:'chest',at:performance.now()};};
+ g.npc=function(id){C.ensureState(this.s);if(id==='savepoint'){window.SHClassicPrompt={type:'savepoint',title:'STARLIGHT CRYSTAL',text:'The crystal hums with restorative light.',actions:[{label:'REST',run:()=>{this.s.player.hp=this.s.player.maxHp;this.s.player.mp=this.s.player.maxMp;this.dialog='The crystal restores HP and MP.';}},{label:'SAVE',run:()=>{SH.Save.write('1',this.s);this.dialog='Journey saved to Slot 1.';}},{label:'CANCEL',run:()=>{}}]};return}return oldNpc(id)};
+ const npcBase=g.npc.bind(g);g.npc=function(id){if(id==='elder'&&this.s.flags?.defeatedStoneback){this.s.quests.main='complete';this.dialog='Elder Rowan: “Whisperwood breathes again. That star-mark may be only the beginning.”';return}if(id==='mara'&&this.s.flags?.defeatedStoneback&&this.s.flags?.herbsDone){this.dialog='Mara: “Even the herbs smell sweeter since you returned from Whisperwood.”';return}return npcBase(id)};
+})();
