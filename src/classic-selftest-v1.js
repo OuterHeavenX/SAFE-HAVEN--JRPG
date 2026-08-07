@@ -1,0 +1,20 @@
+'use strict';
+(()=>{
+ const out=[];const test=(name,fn)=>{try{out.push({name,ok:!!fn()})}catch(error){out.push({name,ok:false,error:String(error)})}};
+ const C=window.SH?.Classic,g=window.__safehavenGame;
+ test('classic core loaded',()=>!!C&&!!g);
+ test('level notation Lv 1',()=>C.formatLevel(1)==='Lv 1');
+ test('level notation Lv 1-9',()=>C.formatLevel(9)==='Lv 1-9');
+ test('level notation rolls to Lv 2',()=>C.formatLevel(10)==='Lv 2');
+ test('ability registry available',()=>!!C.abilities.fire&&!!C.abilities.cure&&!!C.abilities.powerStrike);
+ test('element framework available',()=>C.elementMultiplier({weaknesses:['fire']},'fire')>1&&C.elementMultiplier({immunities:['ice']},'ice')===0);
+ test('save migration defaults',()=>{const x=C.ensureState({player:{name:'Test',level:3,jp:10}});return x.player.rank===3&&x.treasures&&x.hiddenItems&&x.party});
+ test('jp remains spendable currency',()=>typeof g.gainJP==='function');
+ test('party-ready state',()=>{const x=C.ensureState({player:{name:'Kael',level:1}});return x.party.active[0]==='kael'&&x.party.members.kael});
+ test('persistent treasure extension',()=>SH.MAPS.cave.objects.some(o=>o.chest==='classicBladeChest'));
+ test('physical save point exists',()=>SH.MAPS.cave.objects.some(o=>o.npc==='savepoint'));
+ test('battle supports tactical phases',()=>typeof SH.Battle.prototype.beginTarget==='function'&&typeof SH.Battle.prototype.selectTarget==='function');
+ test('victory supports explicit completion',()=>typeof SH.Battle.prototype.finishVictory==='function');
+ window.SHClassicDiagnostics={ranAt:new Date().toISOString(),passed:out.filter(x=>x.ok).length,total:out.length,results:out};
+ const bad=out.filter(x=>!x.ok);if(bad.length)console.warn('SafeHaven Classic JRPG diagnostics:',window.SHClassicDiagnostics);else console.info(`SafeHaven Classic JRPG diagnostics: ${out.length}/${out.length} checks passed.`);
+})();
