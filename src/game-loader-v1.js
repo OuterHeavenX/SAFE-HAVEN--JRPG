@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-1528',false);
+  xhr.open('GET','src/game.js?v=20260807-1546',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -29,6 +29,16 @@
     }`);
 
   source=source.replace(
+    "if(['up','down','left','right'].includes(a))this.move(a);",
+    "if(['up','down','left','right','up-left','up-right','down-left','down-right'].includes(a))this.move(a);"
+  );
+
+  source=source.replace(
+    "move(a){const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[a],m=SH.MAPS[this.s.map];",
+    "move(a){const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0],'up-left':[-1,-1],'up-right':[1,-1],'down-left':[-1,1],'down-right':[1,1]}[a],m=SH.MAPS[this.s.map];"
+  );
+
+  source=source.replace(
     "camera(m,tw){const mw=m.w*tw,mh=m.h*tw;let ox=480-this.s.x*tw,oy=270-this.s.y*tw;",
     "camera(m,tw){const mw=m.w*tw,mh=m.h*tw;const vx=Number.isFinite(window.KaelVisualX)?window.KaelVisualX:this.s.x,vy=Number.isFinite(window.KaelVisualY)?window.KaelVisualY:this.s.y;let ox=480-vx*tw,oy=270-vy*tw;"
   );
@@ -49,20 +59,46 @@
   window.KaelIsMoving=false;
 
   const game=window.__safehavenGame;
+  const DIRECTIONS=['up','down','left','right','up-left','up-right','down-left','down-right'];
   const originalInput=game.input.bind(game);
   game.input=function(action){
-    if(['up','down','left','right'].includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){
-      window.KaelFacing=action;
-      // Do not queue more grid moves while the current visual step is still resolving.
-      // This prevents keyboard auto-repeat from building a movement backlog that
-      // continues after the player releases the key.
+    if(DIRECTIONS.includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){
+      const parts=action.split('-');
+      if(parts.length===1)window.KaelFacing=action;
+      else if(!parts.includes(window.KaelFacing))window.KaelFacing=parts[1]||parts[0];
       if(window.KaelIsMoving)return;
     }
     return originalInput(action);
   };
 
+  // True keyboard diagonals: held cardinal keys combine into one 8-way action.
+  const held=new Set();
+  const keyToDir={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right'};
+  const resolveHeld=()=>{
+    const up=held.has('up'),down=held.has('down'),left=held.has('left'),right=held.has('right');
+    const v=up&&!down?'up':down&&!up?'down':null;
+    const h=left&&!right?'left':right&&!left?'right':null;
+    return v&&h?`${v}-${h}`:(h||v);
+  };
+  addEventListener('keydown',e=>{
+    const d=keyToDir[e.code];
+    if(!d)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    held.add(d);
+  },true);
+  addEventListener('keyup',e=>{
+    const d=keyToDir[e.code];
+    if(!d)return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    held.delete(d);
+  },true);
+  addEventListener('blur',()=>held.clear());
+
   const originalLoop=game.loop.bind(game);
   let lastVisualTime=performance.now();
+  let nextHeldStep=0;
   game.loop=function(t){
     const now=Number.isFinite(t)?t:performance.now();
     const dt=Math.max(0,Math.min(40,now-lastVisualTime));
@@ -95,6 +131,12 @@
           window.KaelVisualY=this.s.y;
           window.KaelIsMoving=false;
         }
+      }
+
+      const heldDir=resolveHeld();
+      if(heldDir&&!window.KaelIsMoving&&now>=nextHeldStep&&!this.dialog&&!this.menu&&!this.shop){
+        this.input(heldDir);
+        nextHeldStep=now+72;
       }
     }else{
       window.KaelIsMoving=false;
