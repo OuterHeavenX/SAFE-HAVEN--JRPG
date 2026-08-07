@@ -1,0 +1,9 @@
+'use strict';
+(()=>{
+ const canvas=document.getElementById('game');if(!canvas)return;const ctx=canvas.getContext('2d');let lastAt=0,particles=[],pop=null,flash=0;
+ const colors={fire:'#ff8a4a',ice:'#9fddff',lightning:'#f4e66d',holy:'#ffe6a0',heal:'#8ef0a3',item:'#ffd276',itemFound:'#ffd276',chest:'#ffe08a',absorb:'#c694ff'};
+ function spawn(fx){if(!fx||fx.at===lastAt)return;lastAt=fx.at;const x=fx.target!=null?175+fx.target*125:745,y=fx.target!=null?245:235,c=colors[fx.type]||'#ffe58a';for(let i=0;i<18;i++){const a=Math.PI*2*i/18,sp=35+Math.random()*90;particles.push({x,y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp-25,life:.5+Math.random()*.35,c,r:2+Math.random()*3})}if(fx.amount!=null)pop={x,y:y-45,text:`${fx.weak?'WEAKNESS! ':''}${fx.crit?'CRITICAL! ':''}${fx.type==='heal'?'+':'-'}${fx.amount}`,life:.8,c};flash=.12;}
+ let prev=performance.now();function frame(t){const dt=Math.min(.04,(t-prev)/1000);prev=t;spawn(window.SHClassicFX);if((window.__safehavenGame?.mode)==='battle'){
+   ctx.save();if(flash>0){ctx.fillStyle='rgba(255,255,255,.08)';ctx.fillRect(0,0,960,540);flash-=dt}for(const p of particles){ctx.globalAlpha=Math.max(0,p.life*1.6);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=100*dt;p.life-=dt}particles=particles.filter(p=>p.life>0);if(pop){ctx.globalAlpha=Math.max(0,pop.life*1.8);ctx.font='bold 20px Georgia';ctx.textAlign='center';ctx.fillStyle='#17152c';ctx.fillText(pop.text,pop.x+2,pop.y+2);ctx.fillStyle=pop.c;ctx.fillText(pop.text,pop.x,pop.y);pop.y-=28*dt;pop.life-=dt;if(pop.life<=0)pop=null}ctx.restore();}
+   requestAnimationFrame(frame)}requestAnimationFrame(frame);
+})();
