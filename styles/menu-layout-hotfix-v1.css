@@ -16,12 +16,12 @@
 .dt-job-list button{flex:0 0 auto;min-height:54px !important;}
 .dt-job-list button:last-child{margin-bottom:6px;}
 
-/* Give the equipment touch list a little more breathing room and keep it inside its lower panel. */
+/* Match the equipment touch list to the lowered canvas panels after the equipped-header spacing repair. */
 .dt-equip-list{
   left:10.05% !important;
-  top:40.4% !important;
+  top:41.75% !important;
   width:36.5% !important;
-  height:44.4% !important;
+  height:43.9% !important;
   box-sizing:border-box;
   overflow-y:auto;
   overflow-x:hidden;
@@ -31,5 +31,5 @@
 @media(max-width:700px){
   .dt-job-list{top:15.4% !important;height:70.2% !important;padding-top:35px !important;gap:6px !important;}
   .dt-job-list button{min-height:48px !important;}
-  .dt-equip-list{top:40.5% !important;height:44% !important;padding-top:30px !important;}
+  .dt-equip-list{top:41.6% !important;height:44% !important;padding-top:30px !important;}
 }
