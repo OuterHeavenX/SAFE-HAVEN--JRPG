@@ -10,7 +10,7 @@ function bar(x,y,w,h,v,max,color){ctx.fillStyle='#28283c';ctx.fillRect(x,y,w,h);
 function diamond(x,y,c=C.gold){ctx.fillStyle=c;ctx.beginPath();ctx.moveTo(x,y-7);ctx.lineTo(x+7,y);ctx.lineTo(x,y+7);ctx.lineTo(x-7,y);ctx.closePath();ctx.fill();}
 function item(id){return SH.DATA.weapons[id]||SH.DATA.armor[id]||null;}
 function eqName(id){return id?(item(id)?.name||id):'— Empty —';}
-function ownedEquipment(){return Object.keys(g.s?.equipment||{}).filter(id=>(g.s.equipment[id]||0)>0&&item(id));}
+function ownedEquipment(){const ids=new Set(Object.keys(g.s?.equipment||{}).filter(id=>(g.s.equipment[id]||0)>0&&item(id)));for(const id of Object.values(g.s?.player?.equipment||{}))if(id&&item(id))ids.add(id);return [...ids];}
 function baseStatsWithout(slot){const p=g.s.player;let atk=p.str,def=p.vit,agi=p.agi;for(const [sl,id] of Object.entries(p.equipment||{})){if(sl===slot||!id)continue;const o=item(id)||{};atk+=o.atk||0;def+=o.def||0;agi+=o.agi||0;}return{attack:atk,defense:def,agi};}
 function projected(candidate){const base=baseStatsWithout(candidate.slot);return{attack:base.attack+(candidate.atk||0),defense:base.defense+(candidate.def||0),agi:base.agi+(candidate.agi||0)};}
 function diffText(label,current,next,x,y){const d=next-current,c=d>0?C.green:d<0?C.red:C.muted,s=d>0?`+${d}`:`${d}`;text(label,x,y,15,C.muted);text(`${current}  →  ${next}`,x+94,y,16,c);text(d===0?'—':s,x+225,y,15,c,'right');}
@@ -24,17 +24,17 @@ function drawEquipment(){
  panel(70,30,820,480,'EQUIPMENT');
  panel(96,66,768,112,'CURRENTLY EQUIPPED');
  const slots=[['Weapon','weapon'],['Shield','shield'],['Head','head'],['Body','body'],['Accessory','accessory']];
- slots.forEach(([lab,sl],i)=>{const col=i<3?0:1,row=i<3?i:i-3,x=120+col*370,y=102+row*25;text(lab+':',x,y,13,C.muted);text(eqName(g.s.player.equipment[sl]),x+76,y,14,C.cream)});
+ slots.forEach(([lab,sl],i)=>{const col=i<3?0:1,row=i<3?i:i-3,x=120+col*370,y=122+row*22;text(lab+':',x,y,13,C.muted);text(eqName(g.s.player.equipment[sl]),x+76,y,14,C.cream)});
  panel(96,190,355,284,'OWNED GEAR'); panel(465,190,399,284,'STAT PREVIEW');
- const list=ownedEquipment(); if(!list.length){text('No unequipped gear owned.',126,245,16,C.muted);return;}
+ const list=ownedEquipment(); if(!list.length){text('No equipment owned yet.',126,245,16,C.muted);return;}
  g.menu.index=Math.max(0,Math.min(g.menu.index,list.length-1));
- list.slice(0,8).forEach((id,i)=>{const o=item(id),y=238+i*28;if(i===g.menu.index)diamond(121,y);const equipped=g.s.player.equipment[o.slot]===id;text(o.name,140,y,15,equipped?C.gold:C.cream);if(equipped)text('E',421,y,12,C.gold,'right')});
+ list.slice(0,8).forEach((id,i)=>{const o=item(id),y=238+i*28;if(i===g.menu.index)diamond(121,y);const equipped=g.s.player.equipment[o.slot]===id;text(o.name,140,y,15,equipped?C.gold:C.cream);if(equipped)text('EQUIPPED',421,y,10,C.gold,'right')});
  const id=list[g.menu.index],o=item(id),curId=g.s.player.equipment[o.slot],cur=item(curId)||{};const now=g.stats(),next=projected(o);
  text(o.name,490,234,20,C.gold);text(`${o.slot.toUpperCase()}  •  comparing with ${eqName(curId)}`,490,260,12,C.muted);
  diffText('Attack',now.attack,next.attack,490,305);diffText('Defense',now.defense,next.defense,490,340);diffText('Agility',now.agi,next.agi,490,375);
  const deltas=[(o.atk||0)-(cur.atk||0),(o.def||0)-(cur.def||0),(o.agi||0)-(cur.agi||0)];
  const better=deltas.some(v=>v>0),worse=deltas.some(v=>v<0);text(better&&!worse?'▲ UPGRADE':worse&&!better?'▼ DOWNGRADE':better&&worse?'◆ TRADE-OFF':'◆ SIDEGRADE',490,421,16,better&&!worse?C.green:worse&&!better?C.red:C.gold);
- text('A Equip     B Back',816,449,12,C.muted,'right');
+ text('Tap gear to compare/equip',816,449,12,C.muted,'right');
 }
 function drawStatus(){
  const p=g.s.player,st=g.stats(),need=Math.max(0,p.nextXp-p.xp);panel(90,34,780,472,'STATUS');
@@ -45,7 +45,7 @@ function drawStatus(){
  text(`XP ${p.xp} / ${p.nextXp}`,453,132,17,C.cream);bar(453,150,350,13,p.xp,p.nextXp,C.green);text(`${need} XP until Level ${p.level+1}`,453,180,15,C.gold);
  text(`JP ${p.jp} / ${p.nextJp}`,453,224,17,C.cream);bar(453,242,350,13,p.jp,p.nextJp,C.blue);text(`${Math.max(0,p.nextJp-p.jp)} JP until Job Lv ${p.jobLevel+1}`,453,272,14,C.muted);
  text(`HP ${p.hp} / ${p.maxHp}`,453,318,16);bar(453,336,350,11,p.hp,p.maxHp,'#6fc37c');text(`MP ${p.mp} / ${p.maxMp}`,453,374,16,C.blue);bar(453,392,350,11,p.mp,p.maxMp,'#6597d0');
- text(`Luck ${p.luck}   •   Vitality ${p.vit}`,453,432,14,C.muted);text('B Back',808,443,12,C.muted,'right');
+ text(`Luck ${p.luck}   •   Vitality ${p.vit}`,453,432,14,C.muted);
 }
 function drawJobs(){
  const p=g.s.player;panel(70,30,820,480,'JOBS');panel(96,68,330,410,'VOCATIONS');panel(440,68,424,410,'JOB DETAILS');
@@ -54,10 +54,9 @@ function drawJobs(){
  const j=JOBS[g.menu.index],unlocked=j.unlock();text(j.name.toUpperCase(),468,116,22,unlocked?C.gold:C.gray);text(unlocked?(p.job===j.id?'Currently equipped vocation':'Ready to change job'):'Unlock condition:',468,146,13,unlocked?C.muted:C.gray);if(!unlocked)text(j.cond,468,170,14,'#aaa8b5');
  text('PROS',468,216,14,C.green);j.pros.forEach((x,i)=>text('＋ '+x,468,244+i*27,15,unlocked?C.green:C.gray));text('CONS',468,316,14,C.red);j.cons.forEach((x,i)=>text('− '+x,468,344+i*27,15,unlocked?C.red:C.gray));
  const dat=SH.DATA.jobs[j.id];if(dat?.abilities?.length){text('ABILITIES',660,216,14,C.gold);dat.abilities.slice(0,3).forEach((a,i)=>text(`${a[0]}  (${a[1]} JP)`,660,244+i*27,13,unlocked?C.cream:C.gray));}
- text(unlocked?'A Select Job   •   B Back':'Locked jobs cannot be selected',822,449,12,unlocked?C.muted:C.gray,'right');
 }
 const originalDrawMenu=g.drawMenu.bind(g);
-g.drawMenu=function(){if(this.menu?.page==='equipment')return drawEquipment();if(this.menu?.page==='status')return drawStatus();if(this.menu?.page==='jobs')return drawJobs();originalDrawMenu();if(this.menu?.page==='root'){text('▲▼ Navigate   •   A Select   •   B Back',814,476,11,C.muted,'right')}};
+g.drawMenu=function(){if(this.menu?.page==='equipment')return drawEquipment();if(this.menu?.page==='status')return drawStatus();if(this.menu?.page==='jobs')return drawJobs();originalDrawMenu();};
 const originalMenuInput=g.menuInput.bind(g);
 g.menuInput=function(a){
  if(this.menu?.page==='jobs'){
