@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <meta name="theme-color" content="#090817">
 <title>SafeHaven</title>
-<link rel="stylesheet" href="styles/main.css?v=20260806-2233">
+<link rel="stylesheet" href="styles/main.css?v=20260806-2252">
 </head>
 <body>
 <div id="boot-error" hidden></div>
@@ -17,18 +17,35 @@ window.onerror=(message,source,line,column,error)=>{
 </script>
 <div id="game-shell">
   <canvas id="game" width="960" height="540" aria-label="SafeHaven game canvas"></canvas>
-  <div id="touch" aria-label="Touch controls">
-    <div class="dpad">
-      <button data-action="up">▲</button><button data-action="left">◀</button><button data-action="down">▼</button><button data-action="right">▶</button>
+
+  <div id="touch" class="touch-layer" aria-label="Touch controls">
+    <div class="joystick" aria-label="Movement joystick">
+      <div class="joystick-ring"><div class="joystick-knob"></div></div>
+      <button class="joy-proxy" data-action="up" aria-hidden="true"></button>
+      <button class="joy-proxy" data-action="down" aria-hidden="true"></button>
+      <button class="joy-proxy" data-action="left" aria-hidden="true"></button>
+      <button class="joy-proxy" data-action="right" aria-hidden="true"></button>
     </div>
     <div class="actions"><button data-action="menu">MENU</button><button data-action="cancel">B</button><button class="primary" data-action="confirm">A</button></div>
   </div>
+
+  <div id="title-touch" class="touch-layer title-touch" aria-label="Title screen touch controls">
+    <div class="joystick" aria-label="Menu joystick">
+      <div class="joystick-ring"><div class="joystick-knob"></div></div>
+      <button class="joy-proxy" data-action="up" aria-hidden="true"></button>
+      <button class="joy-proxy" data-action="down" aria-hidden="true"></button>
+      <button class="joy-proxy" data-action="left" aria-hidden="true"></button>
+      <button class="joy-proxy" data-action="right" aria-hidden="true"></button>
+    </div>
+    <div class="actions title-actions"><button data-action="cancel">B</button><button class="primary" data-action="confirm">A</button></div>
+  </div>
 </div>
-<script src="src/data.js?v=20260806-2233"></script>
-<script src="src/save.js?v=20260806-2233"></script>
-<script src="src/battle.js?v=20260806-2233"></script>
-<script src="src/world.js?v=20260806-2233"></script>
-<script src="src/ui.js?v=20260806-2233"></script>
-<script src="src/game.js?v=20260806-2233"></script>
+<script src="src/data.js?v=20260806-2252"></script>
+<script src="src/save.js?v=20260806-2252"></script>
+<script src="src/battle.js?v=20260806-2252"></script>
+<script src="src/world.js?v=20260806-2252"></script>
+<script src="src/ui.js?v=20260806-2252"></script>
+<script src="src/game.js?v=20260806-2252"></script>
+<script src="src/joystick.js?v=20260806-2252"></script>
 </body>
 </html>
