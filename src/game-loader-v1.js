@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-1512',false);
+  xhr.open('GET','src/game.js?v=20260807-1528',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -53,6 +53,10 @@
   game.input=function(action){
     if(['up','down','left','right'].includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){
       window.KaelFacing=action;
+      // Do not queue more grid moves while the current visual step is still resolving.
+      // This prevents keyboard auto-repeat from building a movement backlog that
+      // continues after the player releases the key.
+      if(window.KaelIsMoving)return;
     }
     return originalInput(action);
   };
@@ -76,7 +80,7 @@
         const dy=this.s.y-window.KaelVisualY;
         const dist=Math.hypot(dx,dy);
         if(dist>0.001){
-          const maxStep=dt/105;
+          const maxStep=dt/90;
           if(dist<=maxStep){
             window.KaelVisualX=this.s.x;
             window.KaelVisualY=this.s.y;
