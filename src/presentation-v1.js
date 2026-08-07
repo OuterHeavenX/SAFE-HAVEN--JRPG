@@ -53,7 +53,22 @@ function enemyArt(e,x,y,t){
  ctx.restore();
 }
 function kaelBattle(x,y,t){
- ctx.save();ctx.translate(x,y+Math.sin(t*5)*2);ellipse(0,35,24,6,'rgba(0,0,0,.28)');px(-9,-18,18,17,'#d9a66b');px(-11,-20,22,6,'#39273b');px(-13,0,26,24,'#44658c');px(-11,24,8,12,'#6d3d2f');px(3,24,8,12,'#6d3d2f');ctx.strokeStyle='#e8d7a5';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(12,2);ctx.lineTo(30,-20);ctx.stroke();ctx.strokeStyle='#6e4c2d';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(9,5);ctx.lineTo(17,13);ctx.stroke();ctx.restore();
+  const a=window.KaelLevel01,image=a?.walk;
+  if(a&&image&&a.ready&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0){
+    const fw=a.frameW||64,fh=a.frameH||64;
+    const row=(a.directions&&a.directions.left!=null)?a.directions.left:1;
+    const frame=0;
+    const size=132;
+    ctx.save();
+    ctx.translate(0,Math.sin(t*4)*1.5);
+    ctx.imageSmoothingEnabled=false;
+    ellipse(x,y+39,28,7,'rgba(0,0,0,.28)');
+    ctx.drawImage(image,frame*fw,row*fh,fw,fh,Math.round(x-size/2),Math.round(y-size*.58),size,size);
+    ctx.restore();
+    return;
+  }
+  // Safe fallback only if the supplied sprite asset genuinely fails to load.
+  ctx.save();ctx.translate(x,y+Math.sin(t*5)*2);ellipse(0,35,24,6,'rgba(0,0,0,.28)');px(-9,-18,18,17,'#d9a66b');px(-11,-20,22,6,'#39273b');px(-13,0,26,24,'#44658c');px(-11,24,8,12,'#6d3d2f');px(3,24,8,12,'#6d3d2f');ctx.restore();
 }
 function burst(x,y,color='#ffe58a'){for(let i=0;i<10;i++){const a=TAU*i/10;fx.push({x,y,vx:Math.cos(a)*rand(50,120),vy:Math.sin(a)*rand(50,120),life:.45,color,size:rand(2,5)});}}
 SH.Battle=class extends OriginalBattle{
