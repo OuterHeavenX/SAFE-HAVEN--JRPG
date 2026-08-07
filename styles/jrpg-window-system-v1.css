@@ -1,0 +1,147 @@
+/* SafeHaven JRPG window-system pass — presentation only. No gameplay/input logic changes. */
+:root{
+  --sh-window-bg-1:#20224f;
+  --sh-window-bg-2:#0b0d2a;
+  --sh-window-bg-3:#07091e;
+  --sh-frame:#d7bd69;
+  --sh-frame-soft:#8f835a;
+  --sh-inner:#f1e3af;
+  --sh-text:#fff0cf;
+  --sh-muted:#aaa8bd;
+  --sh-highlight:rgba(235,211,129,.14);
+  --sh-divider:rgba(224,201,120,.30);
+}
+
+/* One visual language for every direct-touch menu surface. */
+.dt-menu-root,.dt-equip-list,.dt-job-list,.dt-simple-list,.dt-confirm,.dt-back{
+  border-radius:3px !important;
+  border:2px solid var(--sh-frame) !important;
+  background:linear-gradient(180deg,var(--sh-window-bg-1) 0%,#14173f 44%,var(--sh-window-bg-2) 100%) !important;
+  box-shadow:
+    0 0 0 4px #090b22,
+    inset 0 0 0 1px rgba(255,246,213,.28),
+    inset 0 2px 0 rgba(255,255,255,.08),
+    0 10px 24px rgba(0,0,0,.38) !important;
+}
+
+/* MAIN MENU: reads as one table, not eight detached cards. */
+.dt-menu-root{
+  gap:0 !important;
+  padding:10px 12px !important;
+}
+.dt-menu-root button{
+  border:0 !important;
+  border-bottom:1px solid var(--sh-divider) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  min-height:0 !important;
+  padding:0 16px !important;
+  color:var(--sh-text) !important;
+  box-shadow:none !important;
+}
+.dt-menu-root button:last-child{border-bottom:0 !important;}
+.dt-menu-root button.selected,
+.dt-menu-root button:active{
+  background:linear-gradient(90deg,var(--sh-highlight),rgba(235,211,129,.035)) !important;
+  color:#ffe79a !important;
+}
+.dt-menu-root button.selected::before{content:'◆';margin-right:10px;color:#ffe07f;}
+
+/* GENERIC LISTS: Items / Quests / Bestiary become a single table with row separators. */
+.dt-simple-list{
+  gap:0 !important;
+  padding:14px 18px !important;
+}
+.dt-simple-list button{
+  border:0 !important;
+  border-bottom:1px solid var(--sh-divider) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  min-height:46px !important;
+  padding:7px 12px !important;
+  box-shadow:none !important;
+}
+.dt-simple-list button:last-child{border-bottom:0 !important;}
+.dt-simple-list button:active{background:var(--sh-highlight) !important;}
+
+/* EQUIPMENT: one owned-gear table inside the left panel. */
+.dt-equip-list{
+  gap:0 !important;
+  padding-left:16px !important;
+  padding-right:16px !important;
+}
+.dt-equip-list:before{
+  color:#e6cf86 !important;
+  letter-spacing:.8px !important;
+}
+.dt-equip-list button{
+  border:0 !important;
+  border-bottom:1px solid var(--sh-divider) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  min-height:44px !important;
+  padding:7px 12px !important;
+  box-shadow:none !important;
+}
+.dt-equip-list button:last-child{border-bottom:0 !important;}
+.dt-equip-list button.selected,
+.dt-equip-list button:active{background:var(--sh-highlight) !important;color:#ffe69a !important;}
+
+/* JOBS: same table language; locked jobs are muted rows, not separate cards. */
+.dt-job-list{
+  gap:0 !important;
+  padding-left:16px !important;
+  padding-right:16px !important;
+}
+.dt-job-list:before{color:#e6cf86 !important;letter-spacing:.8px !important;}
+.dt-job-list button{
+  border:0 !important;
+  border-bottom:1px solid var(--sh-divider) !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  min-height:64px !important;
+  padding:8px 12px !important;
+  box-shadow:none !important;
+}
+.dt-job-list button:last-child{border-bottom:0 !important;}
+.dt-job-list button:active{background:var(--sh-highlight) !important;}
+.dt-job-list button.locked{
+  background:rgba(0,0,0,.10) !important;
+  color:#77798b !important;
+}
+.dt-job-list button.locked small{color:#77798b !important;}
+
+/* Back is a compact footer action instead of a large floating card. */
+.dt-back{
+  right:11.2% !important;
+  bottom:7.6% !important;
+  min-width:118px;
+  padding:8px 15px !important;
+  font-size:13px !important;
+  text-align:center;
+  box-shadow:0 0 0 3px #090b22,inset 0 0 0 1px rgba(255,246,213,.24),0 5px 12px rgba(0,0,0,.32) !important;
+}
+.dt-back:active{background:linear-gradient(180deg,#31355f,#121531) !important;}
+
+/* Equip confirmation follows the same window family. */
+.dt-confirm{
+  border:2px solid var(--sh-frame) !important;
+  box-shadow:0 0 0 5px #090b22,inset 0 0 0 1px rgba(255,246,213,.28),0 18px 50px rgba(0,0,0,.65) !important;
+}
+.dt-confirm-actions button{
+  border-radius:2px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.10) !important;
+}
+
+/* Keep battle command presentation separate and readable; no behavior changes. */
+.dt-battle button{border-radius:3px !important;}
+
+@media(max-width:700px){
+  .dt-menu-root{padding:7px 9px !important;}
+  .dt-menu-root button{padding:0 11px !important;}
+  .dt-simple-list{padding:10px 13px !important;}
+  .dt-simple-list button{min-height:39px !important;padding:5px 9px !important;}
+  .dt-equip-list button{min-height:36px !important;padding:5px 9px !important;}
+  .dt-job-list button{min-height:50px !important;padding:6px 9px !important;}
+  .dt-back{min-width:100px;padding:7px 12px !important;font-size:12px !important;}
+}
