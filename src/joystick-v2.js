@@ -1,17 +1,17 @@
 'use strict';
 (()=>{
-const DEAD=.23,MAX=31,REPEAT=105;
+const DEAD=.20,MAX=31;
 let enteredGame=false;
 const main=document.getElementById('touch');
 const title=document.getElementById('title-touch');
+const shell=document.getElementById('game-shell');
 
 function fire(layer,dir,facing){
   if(layer===main&&window.__safehavenGame){
     if(facing)window.KaelFacing=facing;
-    window.__safehavenGame.input(dir);
+    window.KaelTouchHeldDir=dir||null;
     return;
   }
-  // Title/menu joystick remains cardinal-only.
   const cardinal=dir.includes('-')?dir.split('-')[0]:dir;
   const b=layer?.querySelector(`.joy-proxy[data-action="${cardinal}"]`);
   if(!b)return;
@@ -24,7 +24,21 @@ function mount(layer){
   const ring=joy.querySelector('.joystick-ring');
   const knob=joy.querySelector('.joystick-knob');
   const eightWay=layer===main;
-  let active=false,lastDir=null,lastFacing=null,lastFire=0,raf=0;
+  const dynamic=eightWay;
+  let active=false,lastDir=null,lastFacing=null,pointerId=null;
+
+  if(dynamic){joy.classList.add('dynamic');joy.style.opacity='0';joy.style.pointerEvents='none';}
+
+  const positionDynamic=e=>{
+    if(!dynamic||!shell)return;
+    const sr=shell.getBoundingClientRect();
+    const size=96,half=size/2,pad=half+10;
+    const x=Math.max(pad,Math.min(sr.width*.48,e.clientX-sr.left));
+    const y=Math.max(pad,Math.min(sr.height-pad,e.clientY-sr.top));
+    joy.style.left=(x-half)+'px';joy.style.top=(y-half)+'px';
+    joy.style.right='auto';joy.style.bottom='auto';
+    joy.style.opacity='1';
+  };
 
   const calc=e=>{
     const r=ring.getBoundingClientRect();
@@ -36,69 +50,43 @@ function mount(layer){
     const nx=dx/rad,ny=dy/rad;
     knob.style.transform=`translate3d(${nx*MAX}px,${ny*MAX}px,0)`;
     if(Math.hypot(nx,ny)<DEAD)return null;
-
-    const ax=Math.abs(nx),ay=Math.abs(ny);
-    const horizontal=nx>0?'right':'left';
-    const vertical=ny>0?'down':'up';
-    if(eightWay&&ax>.32&&ay>.32){
-      // Preserve whichever cardinal facing is already natural for the diagonal;
-      // otherwise use the dominant stick axis.
-      let facing=window.KaelFacing;
-      if(facing!==horizontal&&facing!==vertical)facing=ax>=ay?horizontal:vertical;
-      return{dir:`${vertical}-${horizontal}`,facing};
-    }
-    const dir=ax>ay?horizontal:vertical;
-    return{dir,facing:dir};
+    const ax=Math.abs(nx),ay=Math.abs(ny),horizontal=nx>0?'right':'left',vertical=ny>0?'down':'up';
+    if(eightWay&&ax>.30&&ay>.30){let facing=window.KaelFacing;if(facing!==horizontal&&facing!==vertical)facing=ax>=ay?horizontal:vertical;return{dir:`${vertical}-${horizontal}`,facing};}
+    const dir=ax>ay?horizontal:vertical;return{dir,facing:dir};
   };
 
-  const step=t=>{
-    if(!active){raf=0;return;}
-    if(lastDir&&t-lastFire>=REPEAT){fire(layer,lastDir,lastFacing);lastFire=t;}
-    raf=requestAnimationFrame(step);
+  const apply=e=>{
+    const v=calc(e);lastDir=v?.dir||null;lastFacing=v?.facing||null;
+    if(layer===main){if(lastFacing)window.KaelFacing=lastFacing;window.KaelTouchHeldDir=lastDir;}
+    else if(lastDir)fire(layer,lastDir,lastFacing);
   };
 
   const start=e=>{
-    if(e.target?.classList?.contains('joy-proxy'))return;
-    e.preventDefault();
-    active=true;
-    joy.classList.add('active');
-    const v=calc(e);lastDir=v?.dir||null;lastFacing=v?.facing||null;
-    if(lastDir){fire(layer,lastDir,lastFacing);lastFire=performance.now();}
-    if(!raf)raf=requestAnimationFrame(step);
+    if(active||e.target?.classList?.contains('joy-proxy'))return;
+    e.preventDefault();active=true;pointerId=e.pointerId;positionDynamic(e);joy.classList.add('active');apply(e);
   };
-
-  const move=e=>{
-    if(!active)return;
-    e.preventDefault();
-    const v=calc(e),d=v?.dir||null,f=v?.facing||null;
-    if(d&&d!==lastDir){lastDir=d;lastFacing=f;fire(layer,d,f);lastFire=performance.now();}
-    else{lastDir=d;lastFacing=f;}
-  };
-
+  const move=e=>{if(!active||pointerId!==null&&e.pointerId!==pointerId)return;e.preventDefault();apply(e);};
   const end=e=>{
-    if(!active)return;
-    e.preventDefault?.();
-    active=false;lastDir=null;lastFacing=null;
-    joy.classList.remove('active');
-    knob.style.transform='translate3d(0,0,0)';
+    if(!active||pointerId!==null&&e.pointerId!=null&&e.pointerId!==pointerId)return;
+    e.preventDefault?.();active=false;pointerId=null;lastDir=null;lastFacing=null;window.KaelTouchHeldDir=null;joy.classList.remove('active');knob.style.transform='translate3d(0,0,0)';if(dynamic)joy.style.opacity='0';
   };
 
-  joy.addEventListener('pointerdown',start,{passive:false});
+  if(dynamic&&shell){
+    shell.addEventListener('pointerdown',e=>{
+      const g=window.__safehavenGame,sr=shell.getBoundingClientRect();
+      if(!g||g.mode!=='world'||g.dialog||g.menu||g.shop)return;
+      if(e.clientX-sr.left>sr.width*.50)return;
+      if(e.target?.closest?.('button,.actions,.modal-touch,#direct-touch-ui,#classic-ui'))return;
+      start(e);
+    },{passive:false,capture:true});
+  }else joy.addEventListener('pointerdown',start,{passive:false});
+
   window.addEventListener('pointermove',move,{passive:false});
   window.addEventListener('pointerup',end,{passive:false});
   window.addEventListener('pointercancel',end,{passive:false});
   window.addEventListener('blur',()=>{if(active)end(new Event('blur'));});
 }
 
-mount(main);
-mount(title);
-
-if(main&&title){
-  const sync=()=>{
-    if(main.style.opacity==='1')enteredGame=true;
-    if(enteredGame)title.style.display='none';
-  };
-  new MutationObserver(sync).observe(main,{attributes:true,attributeFilter:['style']});
-  sync();
-}
+mount(main);mount(title);
+if(main&&title){const sync=()=>{if(main.style.opacity==='1')enteredGame=true;if(enteredGame)title.style.display='none';};new MutationObserver(sync).observe(main,{attributes:true,attributeFilter:['style']});sync();}
 })();
