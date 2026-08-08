@@ -4,7 +4,7 @@ const canvas=document.getElementById('game');
 if(!canvas||!window.SH||!SH.Battle)return;
 const ctx=canvas.getContext('2d');
 const TAU=Math.PI*2;
-let game=null,battle=null,fx=[],shake=0,victory=null;
+let game=null,battle=null,fx=[],shake=0,victory=null,kaelPose='idle',kaelPoseAt=performance.now();
 const OriginalBattle=SH.Battle;
 const BaseFill=CanvasRenderingContext2D.prototype.fillRect;
 const rand=(a,b)=>a+Math.random()*(b-a);
@@ -55,25 +55,28 @@ function enemyArt(e,x,y,t){
  ctx.restore();
 }
 function kaelBattle(x,y,t){
-  const a=window.KaelLevel01,image=a?.walk;
-  if(a&&image&&a.ready&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0){
-    const fw=a.frameW||64,fh=a.frameH||64;
-    const row=(a.directions&&a.directions.left!=null)?a.directions.left:1;
-    const frame=0;
-    const size=176;
-    ctx.save();
-    ctx.translate(0,Math.sin(t*4)*1.5);
-    ctx.imageSmoothingEnabled=false;
-    ellipse(x,y+48,36,8,'rgba(0,0,0,.3)');
-    ctx.drawImage(image,frame*fw,row*fh,fw,fh,Math.round(x-size/2),Math.round(y-size*.58),size,size);
-    ctx.restore();
-    return;
+  const a=window.KaelLevel01;
+  if(a){
+    const state=battle?.visualState||'idle';
+    if(state!==kaelPose){kaelPose=state;kaelPoseAt=performance.now();}
+    const age=(performance.now()-kaelPoseAt)/1000;
+    const fw=a.frameW||64,fh=a.frameH||64,row=(a.directions&&a.directions.left!=null)?a.directions.left:1;
+    let image=null,cols=1,frame=0;
+    if(state==='attack'&&a.attackReady&&a.attack?.complete&&a.attack.naturalWidth>0){image=a.attack;cols=a.attackCols||8;frame=Math.min(cols-1,Math.floor(age*22));}
+    else if(a.idleReady&&a.idle?.complete&&a.idle.naturalWidth>0){image=a.idle;cols=a.idleCols||12;frame=Math.floor(t*7)%cols;}
+    else if(a.ready&&a.walk?.complete&&a.walk.naturalWidth>0){image=a.walk;cols=a.walkCols||6;frame=Math.floor(t*6)%cols;}
+    if(image){
+      const size=176;
+      ctx.save();ctx.imageSmoothingEnabled=false;
+      ctx.drawImage(image,frame*fw,row*fh,fw,fh,Math.round(x-size/2),Math.round(y-size*.58),size,size);
+      ctx.restore();return;
+    }
   }
   ctx.save();ctx.translate(x,y+Math.sin(t*5)*2);ellipse(0,38,28,7,'rgba(0,0,0,.28)');px(-11,-22,22,20,'#d9a66b');px(-13,-24,26,7,'#39273b');px(-16,1,32,29,'#44658c');px(-13,30,9,14,'#6d3d2f');px(4,30,9,14,'#6d3d2f');ctx.restore();
 }
 function burst(x,y,color='#ffe58a'){for(let i=0;i<10;i++){const a=TAU*i/10;fx.push({x,y,vx:Math.cos(a)*rand(50,120),vy:Math.sin(a)*rand(50,120),life:.45,color,size:rand(2,5)});}}
 SH.Battle=class extends OriginalBattle{
- constructor(g,ids){super(g,ids);game=g;battle=this;victory=null;const oldEnd=g.endBattle.bind(g);if(!g.__presentationWrapped){g.endBattle=(win,fled)=>{if(win&&!fled&&battle){victory={text:battle.message,t:performance.now()/1000,life:.85};}setTimeout(()=>{battle=null;},950);return oldEnd(win,fled)};g.__presentationWrapped=true;}}
+ constructor(g,ids){super(g,ids);game=g;battle=this;victory=null;kaelPose='idle';kaelPoseAt=performance.now();const oldEnd=g.endBattle.bind(g);if(!g.__presentationWrapped){g.endBattle=(win,fled)=>{if(win&&!fled&&battle){victory={text:battle.message,t:performance.now()/1000,life:.85};}setTimeout(()=>{battle=null;},950);return oldEnd(win,fled)};g.__presentationWrapped=true;}}
  hit(e,magic){const before=e.hp;super.hit(e,magic);const dmg=Math.max(0,before-e.hp);const x=enemyX(e.index),y=211;shake=magic?7:4;burst(x,y,magic?'#ff9e58':'#ffe58a');fx.push({text:`-${dmg}`,x,y:y-38,life:.8,color:magic?'#ffb16d':'#fff2a6',vy:-35});if(magic){for(let i=0;i<9;i++)fx.push({x:x+rand(-25,25),y:y+rand(-5,25),vx:rand(-20,20),vy:rand(-120,-60),life:rand(.35,.65),color:'#ff7b43',size:rand(3,7)});}}
  enemyTurn(){const hp=game?.s?.player?.hp||0;super.enemyTurn();const dmg=Math.max(0,hp-(game?.s?.player?.hp||0));if(dmg){shake=6;burst(KAEL_X,KAEL_Y,'#ff7d7d');fx.push({text:`-${dmg}`,x:KAEL_X,y:KAEL_Y-54,life:.8,color:'#ff9b9b',vy:-30});}}
  victory(){super.victory();victory={text:this.message,t:performance.now()/1000,life:1.25};for(let i=0;i<28;i++)fx.push({x:480+rand(-170,170),y:260+rand(-35,35),vx:rand(-35,35),vy:rand(-100,-35),life:rand(.7,1.3),color:['#ffe88a','#9fe1ff','#f5b1ff'][i%3],size:rand(2,6)});}
