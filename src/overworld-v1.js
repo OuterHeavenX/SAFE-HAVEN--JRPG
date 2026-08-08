@@ -9,11 +9,21 @@ const rgb=s=>{const m=String(s).match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);if(m)ret
 const hash=(x,y)=>Math.abs(((x|0)*73856093)^((y|0)*19349663));
 function rect(x,y,w,h,c){ctx.fillStyle=c;Native.call(ctx,Math.round(x),Math.round(y),Math.round(w),Math.round(h));}
 function grassTile(x,y,w,h,key){
- const palettes=key==='76,134,73'?['#4d864a','#568d4d','#467d45','#5a9251']:['#56904d','#609b53','#4f8748','#66a057'];
- const q=w/2,r=h/2,n=hash(x,y);
- rect(x,y,q,r,palettes[n%4]);rect(x+q,y,q,r,palettes[(n+1)%4]);rect(x,y+r,q,r,palettes[(n+2)%4]);rect(x+q,y+r,q,r,palettes[(n+3)%4]);
- const blade='#7ca862';for(let i=0;i<3;i++){const bx=x+4+((n+i*11)%Math.max(6,w-8)),by=y+5+(((n>>2)+i*7)%Math.max(6,h-9));rect(bx,by,2,5,blade);rect(bx+2,by+2,1,3,'rgba(42,103,52,.45)');}
- if(n%5===0){rect(x+15,y+7,4,3,'#9fc06b');rect(x+17,y+5,1,6,'#6b9b55');}
+ const n=hash(x,y),tileX=Math.round(x/Math.max(1,w)),tileY=Math.round(y/Math.max(1,h));
+ const base=key==='76,134,73'?'#4f884b':'#58914e';
+ const alt=key==='76,134,73'?'#548d4e':'#5d9651';
+ rect(x,y,w,h,((tileX>>1)+(tileY>>1))%3===0?alt:base);
+ // Broad, quiet patches replace per-tile micro-noise.
+ if(n%11===0)rect(x+2,y+2,w-4,h-4,'rgba(112,157,83,.12)');
+ if(n%17===0)rect(x+3,y+h-5,w-6,3,'rgba(52,116,60,.10)');
+ // Only a small fraction of tiles receive a tiny grass tuft.
+ if(n%19===0){
+   const bx=x+7+(n%9),by=y+10+((n>>3)%6);
+   rect(bx,by,1,4,'#78a360');
+   rect(bx+3,by+1,1,3,'#6f9b58');
+ }
+ // Rare little field accent; no repeated vertical carpet.
+ if(n%43===0){rect(x+15,y+8,3,2,'#9dbd69');rect(x+16,y+6,1,5,'#6b9553');}
 }
 function waterTile(x,y,w,h){
  const row=riverRows.get(y)||0;riverRows.set(y,row+1);const idx=row+1;
