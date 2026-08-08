@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260808-battle2',false);
+  xhr.open('GET','src/game.js?v=20260808-mobile1',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -42,6 +42,7 @@
     "camera(m,tw){const mw=m.w*tw,mh=m.h*tw;let ox=480-this.s.x*tw,oy=270-this.s.y*tw;",
     "camera(m,tw){const mw=m.w*tw,mh=m.h*tw;const vx=Number.isFinite(window.KaelVisualX)?window.KaelVisualX:this.s.x,vy=Number.isFinite(window.KaelVisualY)?window.KaelVisualY:this.s.y;let ox=480-vx*tw,oy=270-vy*tw;"
   );
+  source=source.replace("return{ox,oy};}","return{ox:Math.round(ox),oy:Math.round(oy)};}");
 
   source=source.replace(
     "const playerX=ox+this.s.x*tw,playerY=oy+this.s.y*tw;person(playerX,playerY,'kael',Math.floor(this.anim*4),this.s.map==='home'?1.4:1.25);",
@@ -62,7 +63,7 @@
   if(!window.__safehavenGame)throw new Error('SafeHaven game instance was not exposed.');
 
   window.KaelFacing=window.KaelFacing||'down';
-  window.KaelVisualX=NaN;window.KaelVisualY=NaN;window.KaelVisualMap=null;window.KaelIsMoving=false;
+  window.KaelVisualX=NaN;window.KaelVisualY=NaN;window.KaelVisualMap=null;window.KaelIsMoving=false;window.KaelTouchHeldDir=null;
   const game=window.__safehavenGame;
   const DIRECTIONS=['up','down','left','right','up-left','up-right','down-left','down-right'];
   const originalInput=game.input.bind(game);
@@ -75,7 +76,7 @@
   const resolveHeld=()=>{const up=held.has('up'),down=held.has('down'),left=held.has('left'),right=held.has('right');const v=up&&!down?'up':down&&!up?'down':null,h=left&&!right?'left':right&&!left?'right':null;return v&&h?`${v}-${h}`:(h||v)};
   addEventListener('keydown',e=>{const d=keyToDir[e.code];if(!d)return;e.preventDefault();e.stopImmediatePropagation();held.add(d)},true);
   addEventListener('keyup',e=>{const d=keyToDir[e.code];if(!d)return;e.preventDefault();e.stopImmediatePropagation();held.delete(d)},true);
-  addEventListener('blur',()=>held.clear());
+  addEventListener('blur',()=>{held.clear();window.KaelTouchHeldDir=null});
   const originalLoop=game.loop.bind(game);let lastVisualTime=performance.now(),nextHeldStep=0;
-  game.loop=function(t){const now=Number.isFinite(t)?t:performance.now(),dt=Math.max(0,Math.min(40,now-lastVisualTime));lastVisualTime=now;if(this.s&&this.mode==='world'){const map=this.s.map;if(window.KaelVisualMap!==map||!Number.isFinite(window.KaelVisualX)||!Number.isFinite(window.KaelVisualY)){window.KaelVisualMap=map;window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}else{const dx=this.s.x-window.KaelVisualX,dy=this.s.y-window.KaelVisualY,dist=Math.hypot(dx,dy);if(dist>0.001){const maxStep=dt/90;if(dist<=maxStep){window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}else{window.KaelVisualX+=dx/dist*maxStep;window.KaelVisualY+=dy/dist*maxStep;window.KaelIsMoving=true}}else{window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}}const heldDir=resolveHeld();if(heldDir&&!window.KaelIsMoving&&now>=nextHeldStep&&!this.dialog&&!this.menu&&!this.shop){this.input(heldDir);nextHeldStep=now+72}}else window.KaelIsMoving=false;return originalLoop(now)};
+  game.loop=function(t){const now=Number.isFinite(t)?t:performance.now(),dt=Math.max(0,Math.min(40,now-lastVisualTime));lastVisualTime=now;if(this.s&&this.mode==='world'){const map=this.s.map;if(window.KaelVisualMap!==map||!Number.isFinite(window.KaelVisualX)||!Number.isFinite(window.KaelVisualY)){window.KaelVisualMap=map;window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}else{const dx=this.s.x-window.KaelVisualX,dy=this.s.y-window.KaelVisualY,dist=Math.hypot(dx,dy);if(dist>0.001){const maxStep=dt/82;if(dist<=maxStep){window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}else{window.KaelVisualX+=dx/dist*maxStep;window.KaelVisualY+=dy/dist*maxStep;window.KaelIsMoving=true}}else{window.KaelVisualX=this.s.x;window.KaelVisualY=this.s.y;window.KaelIsMoving=false}}const heldDir=window.KaelTouchHeldDir||resolveHeld();if(heldDir&&!window.KaelIsMoving&&now>=nextHeldStep&&!this.dialog&&!this.menu&&!this.shop){this.input(heldDir);nextHeldStep=now+16}}else window.KaelIsMoving=false;return originalLoop(now)};
 })();
