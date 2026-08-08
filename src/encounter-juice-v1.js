@@ -16,14 +16,15 @@
  @keyframes jrpgWorldIn{0%{opacity:.82}100%{opacity:0}}
  `;document.head.appendChild(style);
  let transitioning=false,lastMap=g.s?.map||null;
- const originalStart=g.startBattle.bind(g);
+ const originalStart=g.startBattle.bind(g),originalInput=g.input.bind(g);
+ g.input=function(action){if(transitioning)return;return originalInput(action);};
  g.startBattle=function(ids){
    if(transitioning||this.mode==='battle')return;
-   transitioning=true;
+   transitioning=true;window.SHEncounterTransition=true;
    this.notice='';this.noticeT=0;
    layer.className='active';void layer.offsetWidth;
    setTimeout(()=>{originalStart(ids);},3150);
-   setTimeout(()=>{layer.className='';transitioning=false;},3400);
+   setTimeout(()=>{layer.className='';transitioning=false;window.SHEncounterTransition=false;},3400);
  };
  function worldFade(){if(transitioning)return;layer.className='world-in';setTimeout(()=>{if(layer.className==='world-in')layer.className='';},480);}
  let lastMode=g.mode;
