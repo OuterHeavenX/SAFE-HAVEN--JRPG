@@ -13,21 +13,21 @@
       this.message='ATB gauges are charging...';
       this._atbLast=performance.now();
       this._atbEnemyLock=false;
-      this.enemies.forEach((e,i)=>{e.atb=.08+(i*.07);});
+      this.enemies.forEach(e=>{e.atb=0;});
       requestAnimationFrame(t=>this._atbTick(t));
     }
     _playerRate(){
       const p=this.g.s.player||{};
-      let seconds=3.6-clamp((p.agi||8)*.035,0,.7);
-      if(p.statuses?.haste)seconds*=.68;
-      if(p.statuses?.slow)seconds*=1.4;
-      return 1/Math.max(2.25,seconds);
+      let seconds=6.35-clamp((p.agi||8)*.03,0,.6);
+      if(p.statuses?.haste)seconds*=.72;
+      if(p.statuses?.slow)seconds*=1.45;
+      return 1/Math.max(4.5,seconds);
     }
     _enemyRate(e){
-      let seconds=4.15-clamp((e.agi||6)*.035,0,.85);
-      if(e.statuses?.haste)seconds*=.7;
-      if(e.statuses?.slow)seconds*=1.4;
-      return 1/Math.max(2.35,seconds);
+      let seconds=7.0-clamp((e.agi||6)*.035,0,.9);
+      if(e.statuses?.haste)seconds*=.72;
+      if(e.statuses?.slow)seconds*=1.45;
+      return 1/Math.max(4.8,seconds);
     }
     _deepSelection(){return ['magic','item','target'].includes(this.phase);}
     _atbTick(t){
@@ -50,6 +50,11 @@
     }
     command(cmd){
       if(!this.atbReady||this.turn!=='player'||this.done)return;
+      if(cmd==='Attack')this.message='Kael prepares ATTACK — choose a target.';
+      else if(cmd==='Magic')this.message='MAGIC — choose a spell.';
+      else if(cmd==='Item')this.message='ITEM — choose an item.';
+      else if(cmd==='Defend')this.message='Kael DEFENDS.';
+      else if(cmd==='Flee')this.message='Kael attempts to FLEE...';
       return super.command(cmd);
     }
     afterPlayer(){
