@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-classic1',false);
+  xhr.open('GET','src/game.js?v=20260808-battle2',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
@@ -49,10 +49,12 @@
   );
 
   source=source.replace("person(745,240,'kael',Math.floor(this.anim*4),1.7);","");
+  source=source.replace(/this\.battle\.enemies\.forEach\(\(e,i\)=>\{if\(e\.hp<=0\)return;const ex=175\+i\*125;enemy\(e,ex,245\);txt\(e\.name,ex,320,14,'#fff6de','center'\);SH\.UI\.bar\(ctx,ex-50,332,100,8,e\.hp,e\.maxHp,'#c85e62'\)\}\);/g,`this.battle.enemies.forEach((e,i)=>{if(e.hp<=0)return;const ex=245+i*118;txt(e.name,ex,320,14,'#fff6de','center');SH.UI.bar(ctx,ex-50,332,100,8,e.hp,e.maxHp,'#c85e62')});`);
   source=source.replace(/panel\(525,340,410,176,'COMMAND'\);\['Attack','Magic','Item','Defend','Flee'\]\.forEach\(\(x,i\)=>\{[^}]*\}\);/g,'');
   source=source.replace("panel(20,440,470,76);txt(`KAEL   HP ${this.s.player.hp}/${this.s.player.maxHp}   MP ${this.s.player.mp}/${this.s.player.maxMp}`,38,477,16);","panel(20,414,455,64);txt(`KAEL   HP ${this.s.player.hp}/${this.s.player.maxHp}   MP ${this.s.player.mp}/${this.s.player.maxMp}`,38,451,16);");
   source=source.replace('LV ${this.s.player.level}  ${SH.DATA.jobs[this.s.player.job].name.toUpperCase()}','${SH.Classic.formatLevel(this.s.player.rank||this.s.player.level)}  KAEL');
   source=source.replace('`Level ${this.s.player.level}`','SH.Classic.formatLevel(this.s.player.rank||this.s.player.level)');
+  if(source.includes("enemy(e,ex,245)"))console.warn('SafeHaven: legacy battle enemy art was not removed.');
   if(source.includes("panel(525,340,410,176,'COMMAND')"))console.warn('SafeHaven: legacy battle command panel was not removed.');
 
   source=source.replace(/new Game\(\);\s*\}\)\(\);?\s*$/,'window.__safehavenGame=new Game();\n})();');
