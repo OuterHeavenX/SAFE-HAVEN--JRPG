@@ -57,4 +57,11 @@
   const sync=()=>document.body.classList.toggle('cj-victory-open',!!window.SHClassicVictory);
   sync();
   setInterval(sync,80);
+
+  if(!document.getElementById('jrpg-ui-touch-gesture-v1')){
+    const script=document.createElement('script');
+    script.id='jrpg-ui-touch-gesture-v1';
+    script.src='src/jrpg-ui-touch-gesture-v1.js?v=20260808-touch1';
+    document.body.appendChild(script);
+  }
 })();
