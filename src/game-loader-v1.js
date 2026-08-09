@@ -19,7 +19,7 @@
       if(imageReady){
         const fw=clip?.frameW||a.frameW||64, fh=clip?.frameHeight||clip?.frameH||a.frameH||64, cols=clip?.frames||a.cols||6;
         const row=(a.directions&&a.directions[facing]!=null)?a.directions[facing]:0;
-        const f=moving?(Math.floor(performance.now()/(1000/(clip?.fps||10)))%cols):0;
+        const f=hd?(Math.floor(performance.now()/(1000/(clip?.fps||10)))%cols):(moving?(Math.floor(performance.now()/95)%cols):0);
         const dw=hd?64*scale:82*scale, dh=hd?80*scale:82*scale;
         try{
           ctx.save();ctx.imageSmoothingEnabled=false;

@@ -6,8 +6,8 @@
     "idle_down": {
       "frameWidth": 64,
       "frameHeight": 80,
-      "frames": 1,
-      "fps": 1,
+      "frames": 6,
+      "fps": 6,
       "loop": true,
       "anchor": {
         "x": 32,
@@ -45,8 +45,8 @@
     "idle_left": {
       "frameWidth": 64,
       "frameHeight": 80,
-      "frames": 1,
-      "fps": 1,
+      "frames": 6,
+      "fps": 6,
       "loop": true,
       "anchor": {
         "x": 32,
@@ -84,8 +84,8 @@
     "idle_right": {
       "frameWidth": 64,
       "frameHeight": 80,
-      "frames": 1,
-      "fps": 1,
+      "frames": 6,
+      "fps": 6,
       "loop": true,
       "anchor": {
         "x": 32,
@@ -123,8 +123,8 @@
     "idle_up": {
       "frameWidth": 64,
       "frameHeight": 80,
-      "frames": 1,
-      "fps": 1,
+      "frames": 6,
+      "fps": 6,
       "loop": true,
       "anchor": {
         "x": 32,

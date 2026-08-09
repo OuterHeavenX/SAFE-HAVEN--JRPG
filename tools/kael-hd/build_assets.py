@@ -98,13 +98,36 @@ def sequence_frames(path, cols, rows, count, size, margin=2):
     return [normalize(grid_cell(im, cols, rows, i % cols, i // cols), size, margin) for i in range(count)]
 
 
+def shared_sequence_frames(path, cols, rows, positions, size, margin=2):
+    """Preserve inter-frame motion by applying one crop and scale to a full sequence."""
+    im = Image.open(path)
+    cells = [grid_cell(im, cols, rows, col, row) for col, row in positions]
+    boxes = [cell.getchannel("A").getbbox() for cell in cells]
+    boxes = [box for box in boxes if box]
+    if not boxes:
+        return [Image.new("RGBA", size, (0, 0, 0, 0)) for _ in cells]
+    maxw=max(b[2]-b[0] for b in boxes);maxh=max(b[3]-b[1] for b in boxes)
+    scale = min((size[0] - margin * 2) / maxw, (size[1] - margin * 2) / maxh)
+    frames = []
+    for cell,box in zip(cells,[cell.getchannel("A").getbbox() for cell in cells]):
+        if not box:
+            frames.append(Image.new("RGBA",size,(0,0,0,0)));continue
+        art=cell.crop(box);nw=max(1,round(art.width*scale));nh=max(1,round(art.height*scale));art=art.resize((nw,nh),RESAMPLE)
+        canvas = Image.new("RGBA", size, (0, 0, 0, 0))
+        canvas.alpha_composite(art, ((size[0] - nw) // 2, size[1] - 2 - nh))
+        frames.append(canvas)
+    return frames
+
+
 # Overworld: 64x80 exact cells.
-walk = SRC / "walk_source.png"
 run = SRC / "run_source.png"
 dirs = ["down", "left", "right", "up"]
+walk_sources = {direction: SRC / f"walk_{direction}_v2_source.png" for direction in dirs}
+idle_source = SRC / "idle_v2_source.png"
 for row, direction in enumerate(dirs):
-    wf = row_frames(walk, 8, 4, row, 8, (64, 80), 2)
-    export(f"idle_{direction}", [wf[0]], (64, 80), 1, True, "overworld/idle")
+    wf = shared_sequence_frames(walk_sources[direction], 4, 2, [(i % 4, i // 4) for i in range(8)], (64, 80), 2)
+    idle = shared_sequence_frames(idle_source, 6, 4, [(i, row) for i in range(6)], (64, 80), 2)
+    export(f"idle_{direction}", idle, (64, 80), 6, True, "overworld/idle")
     export(f"walk_{direction}", wf, (64, 80), 10, True, "overworld/walk")
     export(f"run_{direction}", row_frames(run, 8, 4, row, 8, (64, 80), 2), (64, 80), 12, True, "overworld/run")
 
