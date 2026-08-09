@@ -18,29 +18,31 @@
     #jrpg-polish .jp-screen{isolation:isolate;background:linear-gradient(180deg,rgba(17,21,61,.995),rgba(5,7,25,.997))}
     #jrpg-polish .jp-btn,#jrpg-polish button{-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 
-    @media (orientation:landscape) and (max-height:560px){
-      #jrpg-polish .jp-screen{inset:max(1.5%,env(safe-area-inset-top)) max(2%,env(safe-area-inset-right)) max(1.5%,env(safe-area-inset-bottom)) max(2%,env(safe-area-inset-left))}
-      #jrpg-polish .jp-head{height:38px;padding:0 12px}
-      #jrpg-polish .jp-title{font-size:15px;line-height:1}
-      #jrpg-polish .jp-sub{font-size:9px;line-height:1.1}
-      #jrpg-polish .jp-body{height:calc(100% - 38px)}
-      #jrpg-polish .jp-root .jp-body{grid-template-columns:35% 65%}
-      #jrpg-polish .jp-left,#jrpg-polish .jp-right{padding:7px 9px;overflow:auto}
-      #jrpg-polish .jp-root .jp-left{display:flex;flex-direction:column;gap:3px;overflow:hidden}
-      #jrpg-polish .jp-root .jp-btn{flex:1 1 0;min-height:0;height:auto;margin:0;padding:3px 9px;font-size:10px;line-height:1}
-      #jrpg-polish .jp-root .jp-right{overflow:hidden;padding:8px 10px}
-      #jrpg-polish .jp-profile{grid-template-columns:76px 1fr;gap:10px;align-items:start}
-      #jrpg-polish .jp-profile .jp-sprite{width:76px;height:76px;align-self:start;justify-self:center;margin-top:2px}
-      #jrpg-polish .jp-name{font-size:17px;margin:0 0 1px}
-      #jrpg-polish .jp-rank{font-size:12px;line-height:1.1}
-      #jrpg-polish .jp-muted{font-size:9px;line-height:1.15}
-      #jrpg-polish .jp-profile>div>div[style]{margin-top:5px!important;font-size:10px;line-height:1.1}
-      #jrpg-polish .jp-bar{height:6px;margin:2px 0 4px}
-      #jrpg-polish .jp-root .jp-grid{gap:4px;margin-top:5px}
-      #jrpg-polish .jp-root .jp-stat{padding:4px 6px;font-size:8px;line-height:1}
-      #jrpg-polish .jp-root .jp-stat b{font-size:12px;margin-top:2px}
-      #jrpg-polish .jp-card{padding:6px;margin-bottom:5px}
-      #jrpg-polish .jp-desc{font-size:10px;line-height:1.25}
+    @media (orientation:landscape) and (pointer:coarse),
+           (orientation:landscape) and (max-width:1100px){
+      #jrpg-polish .jp-screen{inset:max(1.2%,env(safe-area-inset-top)) max(1.8%,env(safe-area-inset-right)) max(1.2%,env(safe-area-inset-bottom)) max(1.8%,env(safe-area-inset-left))!important}
+      #jrpg-polish .jp-head{height:38px!important;padding:0 12px!important}
+      #jrpg-polish .jp-title{font-size:15px!important;line-height:1!important}
+      #jrpg-polish .jp-sub{font-size:9px!important;line-height:1.1!important}
+      #jrpg-polish .jp-body{height:calc(100% - 38px)!important;min-height:0!important}
+      #jrpg-polish .jp-root .jp-body{grid-template-columns:34% 66%!important}
+      #jrpg-polish .jp-left,#jrpg-polish .jp-right{padding:7px 9px!important;min-width:0!important}
+      #jrpg-polish .jp-root .jp-left{display:flex!important;flex-direction:column!important;gap:4px!important;overflow:hidden!important}
+      #jrpg-polish .jp-root .jp-btn{flex:0 0 34px!important;min-height:34px!important;height:34px!important;margin:0!important;padding:3px 9px!important;font-size:11px!important;line-height:1!important}
+      #jrpg-polish .jp-root .jp-right{overflow:hidden!important;padding:8px 10px!important;min-width:0!important}
+      #jrpg-polish .jp-profile{display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;gap:10px!important;align-items:start!important;width:100%!important;min-width:0!important}
+      #jrpg-polish .jp-profile>*{min-width:0!important}
+      #jrpg-polish .jp-profile .jp-sprite{position:static!important;inset:auto!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;transform:none!important;float:none!important;display:block!important;width:88px!important;height:88px!important;max-width:88px!important;max-height:88px!important;margin:0!important;align-self:start!important;justify-self:center!important}
+      #jrpg-polish .jp-name{font-size:17px!important;margin:0 0 1px!important;line-height:1!important}
+      #jrpg-polish .jp-rank{font-size:12px!important;line-height:1.1!important}
+      #jrpg-polish .jp-muted{font-size:9px!important;line-height:1.15!important;white-space:normal!important}
+      #jrpg-polish .jp-profile>div>div[style]{margin-top:4px!important;font-size:10px!important;line-height:1.05!important}
+      #jrpg-polish .jp-bar{height:6px!important;margin:2px 0 3px!important;max-width:230px!important}
+      #jrpg-polish .jp-root .jp-grid{gap:4px!important;margin-top:5px!important}
+      #jrpg-polish .jp-root .jp-stat{padding:4px 6px!important;font-size:8px!important;line-height:1!important;min-height:0!important}
+      #jrpg-polish .jp-root .jp-stat b{font-size:12px!important;margin-top:2px!important}
+      #jrpg-polish .jp-card{padding:6px!important;margin-bottom:5px!important}
+      #jrpg-polish .jp-desc{font-size:10px!important;line-height:1.25!important}
     }
   `;
   document.head.appendChild(style);
