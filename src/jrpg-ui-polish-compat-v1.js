@@ -27,7 +27,7 @@
       #jrpg-polish .jp-body{height:calc(100% - 38px)!important;min-height:0!important}
       #jrpg-polish .jp-root .jp-body{grid-template-columns:34% 66%!important}
       #jrpg-polish .jp-left,#jrpg-polish .jp-right{padding:7px 9px!important;min-width:0!important}
-      #jrpg-polish .jp-root .jp-left{display:flex!important;flex-direction:column!important;gap:4px!important;overflow:hidden!important}
+      #jrpg-polish .jp-root .jp-left{display:flex!important;flex-direction:column!important;gap:4px!important;overflow-x:hidden!important;overflow-y:auto!important}
       #jrpg-polish .jp-root .jp-btn{flex:0 0 34px!important;min-height:34px!important;height:34px!important;margin:0!important;padding:3px 9px!important;font-size:11px!important;line-height:1!important}
       #jrpg-polish .jp-root .jp-right{overflow:hidden!important;padding:8px 10px!important;min-width:0!important}
       #jrpg-polish .jp-profile{display:grid!important;grid-template-columns:92px minmax(0,1fr)!important;gap:10px!important;align-items:start!important;width:100%!important;min-width:0!important}
