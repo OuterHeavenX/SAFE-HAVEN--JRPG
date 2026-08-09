@@ -1,0 +1,10 @@
+'use strict';
+(()=>{
+  const g=window.__safehavenGame,shell=document.getElementById('game-shell');if(!g||!shell)return;
+  const root=document.createElement('div');root.id='chapter2-party-ui';shell.appendChild(root);
+  const style=document.createElement('style');style.textContent=`
+  #chapter2-party-ui{position:absolute;inset:0;z-index:17;pointer-events:none;font-family:Georgia,serif;color:#fff3d4;display:none}#chapter2-party-ui.active{display:block}.c2-lyra{position:absolute;left:max(2%,env(safe-area-inset-left));bottom:max(9%,calc(env(safe-area-inset-bottom) + 34px));width:min(410px,40%);padding:6px 9px;background:rgba(8,9,31,.9);border:2px solid #c7b761;box-shadow:inset 0 0 0 3px #11132d,0 4px 14px rgba(0,0,0,.4)}.c2-name{display:flex;justify-content:space-between;font-size:11px;font-weight:700;margin-bottom:4px}.c2-track{height:8px;background:#11152e;border:1px solid #75683c;overflow:hidden}.c2-fill{height:100%;background:linear-gradient(90deg,#6d5ab8,#9bbbe9,#efd876);transition:width .08s linear}.c2-hp{font-size:10px;color:#cfc8df}.c2-ready{color:#ffe47e}@media(max-height:500px) and (orientation:landscape){.c2-lyra{bottom:max(7%,calc(env(safe-area-inset-bottom) + 28px));width:38%;padding:4px 7px}.c2-name{font-size:9px}.c2-track{height:7px}}
+  `;document.head.appendChild(style);
+  function render(){const l=g.s?.party?.members?.lyra,b=g.battle,active=(g.s?.party?.active||[]).includes('lyra');if(g.mode!=='battle'||!b||b.done||!active||!l){root.className='';root.innerHTML='';return}const atb=Math.max(0,Math.min(1,b.lyraATB||0));root.className='active';root.innerHTML=`<div class="c2-lyra"><div class="c2-name"><span>LYRA <span class="c2-hp">HP ${l.hp}/${l.maxHp}</span></span><span class="${atb>=1?'c2-ready':''}">${atb>=1?'READY':Math.floor(atb*100)+'%'}</span></div><div class="c2-track"><div class="c2-fill" style="width:${(atb*100).toFixed(1)}%"></div></div></div>`}
+  setInterval(render,70);render();
+})();
