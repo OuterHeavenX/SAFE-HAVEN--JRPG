@@ -24,7 +24,7 @@
         if(hd&&window.KaelAnimKey!==animKey){window.KaelAnimKey=animKey;window.KaelAnimStartedAt=now;}
         const elapsed=hd?Math.max(0,now-(window.KaelAnimStartedAt||now)):0;
         const f=hd?(Math.floor(elapsed/(1000/(clip?.fps||10)))%cols):(moving?(Math.floor(now/95)%cols):0);
-        const dw=hd?64*scale:82*scale, dh=hd?80*scale:82*scale;
+        const dh=hd?80*scale:82*scale, dw=hd?dh*(fw/fh):82*scale;
         try{
           ctx.save();ctx.imageSmoothingEnabled=false;
           ctx.drawImage(image,f*fw,hd?0:row*fh,fw,fh,Math.round(x-dw/2),Math.round(y-dh*.72),Math.round(dw),Math.round(dh));
@@ -77,7 +77,7 @@
   const DIRECTIONS=['up','down','left','right','up-left','up-right','down-left','down-right'];
   const originalInput=game.input.bind(game);
   game.input=function(action){
-    if(DIRECTIONS.includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){const parts=action.split('-');if(parts.length===1)window.KaelFacing=action;else if(!parts.includes(window.KaelFacing))window.KaelFacing=parts[1]||parts[0];if(window.KaelIsMoving)return;}
+    if(DIRECTIONS.includes(action)&&this.mode==='world'&&!this.dialog&&!this.menu&&!this.shop){const parts=action.split('-');if(window.KaelLevel01?.family==='hd')window.KaelFacing=action;else if(parts.length===1)window.KaelFacing=action;else if(!parts.includes(window.KaelFacing))window.KaelFacing=parts[1]||parts[0];if(window.KaelIsMoving)return;}
     return originalInput(action);
   };
   const held=new Set();

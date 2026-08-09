@@ -4,30 +4,32 @@
   "standard": "safehaven-hd-pixel-v1",
   "animations": {
     "idle_down": {
-      "frameWidth": 64,
-      "frameHeight": 80,
-      "frames": 6,
-      "fps": 6,
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/idle/idle_down.png",
-      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_down_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_down.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_down_%02d.png",
+      "source": "user-authored"
     },
     "walk_down": {
-      "frameWidth": 64,
-      "frameHeight": 80,
+      "frameWidth": 256,
+      "frameHeight": 256,
       "frames": 8,
       "fps": 10,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/walk/walk_down.png",
-      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_down_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_down.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_down_%02d.png",
+      "source": "user-authored"
     },
     "run_down": {
       "frameWidth": 64,
@@ -43,30 +45,32 @@
       "framePattern": "assets/characters/kael/hd/overworld/run/run_down_%02d.png"
     },
     "idle_left": {
-      "frameWidth": 64,
-      "frameHeight": 80,
-      "frames": 6,
-      "fps": 6,
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/idle/idle_left.png",
-      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_left_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_left_%02d.png",
+      "source": "user-authored"
     },
     "walk_left": {
-      "frameWidth": 64,
-      "frameHeight": 80,
+      "frameWidth": 256,
+      "frameHeight": 256,
       "frames": 8,
       "fps": 10,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/walk/walk_left.png",
-      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_left_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_left_%02d.png",
+      "source": "user-authored"
     },
     "run_left": {
       "frameWidth": 64,
@@ -82,30 +86,32 @@
       "framePattern": "assets/characters/kael/hd/overworld/run/run_left_%02d.png"
     },
     "idle_right": {
-      "frameWidth": 64,
-      "frameHeight": 80,
-      "frames": 6,
-      "fps": 6,
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/idle/idle_right.png",
-      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_right_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_right_%02d.png",
+      "source": "user-authored"
     },
     "walk_right": {
-      "frameWidth": 64,
-      "frameHeight": 80,
+      "frameWidth": 256,
+      "frameHeight": 256,
       "frames": 8,
       "fps": 10,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/walk/walk_right.png",
-      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_right_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_right_%02d.png",
+      "source": "user-authored"
     },
     "run_right": {
       "frameWidth": 64,
@@ -121,30 +127,32 @@
       "framePattern": "assets/characters/kael/hd/overworld/run/run_right_%02d.png"
     },
     "idle_up": {
-      "frameWidth": 64,
-      "frameHeight": 80,
-      "frames": 6,
-      "fps": 6,
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/idle/idle_up.png",
-      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_up_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_up.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_up_%02d.png",
+      "source": "user-authored"
     },
     "walk_up": {
-      "frameWidth": 64,
-      "frameHeight": 80,
+      "frameWidth": 256,
+      "frameHeight": 256,
       "frames": 8,
       "fps": 10,
       "loop": true,
       "anchor": {
-        "x": 32,
-        "y": 78
+        "x": 128,
+        "y": 256
       },
-      "sheet": "assets/characters/kael/hd/overworld/walk/walk_up.png",
-      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_up_%02d.png"
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_up.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_up_%02d.png",
+      "source": "user-authored"
     },
     "run_up": {
       "frameWidth": 64,
@@ -392,6 +400,118 @@
       },
       "sheet": "assets/characters/kael/hd/battle/ko/ko.png",
       "framePattern": "assets/characters/kael/hd/battle/ko/ko_%02d.png"
+    },
+    "idle_down-right": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_down-right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_down-right_%02d.png",
+      "source": "user-authored"
+    },
+    "walk_down-right": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_down-right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_down-right_%02d.png",
+      "source": "user-authored"
+    },
+    "idle_up-right": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_up-right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_up-right_%02d.png",
+      "source": "user-authored"
+    },
+    "walk_up-right": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_up-right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_up-right_%02d.png",
+      "source": "user-authored"
+    },
+    "idle_up-left": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_up-left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_up-left_%02d.png",
+      "source": "user-authored"
+    },
+    "walk_up-left": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_up-left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_up-left_%02d.png",
+      "source": "user-authored"
+    },
+    "idle_down-left": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/idle_down-left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/idle_down-left_%02d.png",
+      "source": "user-authored"
+    },
+    "walk_down-left": {
+      "frameWidth": 256,
+      "frameHeight": 256,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 128,
+        "y": 256
+      },
+      "sheet": "assets/characters/kael/hd/overworld/user/walk_down-left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/user/walk_down-left_%02d.png",
+      "source": "user-authored"
     }
   }
 }
