@@ -1,2 +1,2 @@
 'use strict';
-(()=>{const s=document.createElement('style');s.textContent='body.jp-menu-open #classic-ui{pointer-events:auto!important}';document.head.appendChild(s)})();
+(()=>{const s=document.createElement('style');s.textContent='body.jp-menu-open #classic-ui{pointer-events:auto!important} body.jp-battle-unified #jp-battlehud{min-height:112px;background:rgba(7,9,29,.97);border-radius:4px;padding-top:4px}';document.head.appendChild(s)})();
