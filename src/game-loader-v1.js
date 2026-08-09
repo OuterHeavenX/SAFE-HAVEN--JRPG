@@ -10,19 +10,20 @@
   source=source.replaceAll("this.s.map==='cave'","(this.s.map==='cave'||this.s.map==='starfallRuins')");
 
   source=source.replace("function person(x,y,kind='kael',frame=0,scale=1.2){",`function person(x,y,kind='kael',frame=0,scale=1.2){
-    if(kind==='kael'&&window.KaelLevel01&&window.KaelLevel01.walk){
-      const a=window.KaelLevel01, image=a.walk;
+    if(kind==='kael'&&window.KaelLevel01){
+      const a=window.KaelLevel01, facing=window.KaelFacing||'down', moving=!!window.KaelIsMoving;
+      const hd=a.family==='hd'&&a.animation;
+      const clip=hd?a.animation((moving?'walk':'idle')+'_'+facing):null;
+      const image=clip?.image||a.walk;
       const imageReady=a.ready&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0;
       if(imageReady){
-        const fw=a.frameW||64, fh=a.frameH||64, cols=a.cols||6;
-        const facing=window.KaelFacing||'down';
+        const fw=clip?.frameW||a.frameW||64, fh=clip?.frameHeight||clip?.frameH||a.frameH||64, cols=clip?.frames||a.cols||6;
         const row=(a.directions&&a.directions[facing]!=null)?a.directions[facing]:0;
-        const moving=!!window.KaelIsMoving;
-        const f=moving?(Math.floor(performance.now()/95)%cols):0;
-        const dw=82*scale, dh=82*scale;
+        const f=moving?(Math.floor(performance.now()/(1000/(clip?.fps||10)))%cols):0;
+        const dw=hd?64*scale:82*scale, dh=hd?80*scale:82*scale;
         try{
           ctx.save();ctx.imageSmoothingEnabled=false;
-          ctx.drawImage(image,f*fw,row*fh,fw,fh,Math.round(x-dw/2),Math.round(y-dh*.55),Math.round(dw),Math.round(dh));
+          ctx.drawImage(image,f*fw,hd?0:row*fh,fw,fh,Math.round(x-dw/2),Math.round(y-dh*.72),Math.round(dw),Math.round(dh));
           ctx.restore();return;
         }catch(spriteError){
           try{ctx.restore();}catch(_restoreError){}

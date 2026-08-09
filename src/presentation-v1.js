@@ -60,6 +60,12 @@ function kaelBattle(x,y,t){
     const state=battle?.visualState||'idle';
     if(state!==kaelPose){kaelPose=state;kaelPoseAt=performance.now();}
     const age=(performance.now()-kaelPoseAt)/1000;
+    if(a.family==='hd'&&a.animation){
+      const hp=game?.s?.player,critical=hp&&hp.maxHp&&hp.hp/hp.maxHp<=.25;
+      const name=state==='attack'?'attack':state==='cast'?'magic':state==='defend'?'defend':state==='hurt'?'battle_hurt':state==='victory'?'victory':critical?'critical':'battle_idle';
+      const clip=a.animation(name);
+      if(clip){const elapsed=state==='idle'||name==='critical'?t:age,raw=Math.floor(elapsed*clip.fps),frame=clip.loop?raw%clip.frames:Math.min(clip.frames-1,raw),dw=154,dh=192;ctx.save();ctx.imageSmoothingEnabled=false;ctx.drawImage(clip.image,frame*clip.frameW,0,clip.frameW,clip.frameH,Math.round(x-dw/2),Math.round(y-dh*.68),dw,dh);ctx.restore();return;}
+    }
     const fw=a.frameW||64,fh=a.frameH||64,row=(a.directions&&a.directions.left!=null)?a.directions.left:1;
     let image=null,cols=1,frame=0;
     if(state==='attack'&&a.attackReady&&a.attack?.complete&&a.attack.naturalWidth>0){image=a.attack;cols=a.attackCols||8;frame=Math.min(cols-1,Math.floor(age*22));}
