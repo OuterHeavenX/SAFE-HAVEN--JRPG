@@ -15,7 +15,7 @@
       const hd=a.family==='hd'&&a.animation;
       const clip=hd?a.animation((moving?'walk':'idle')+'_'+facing):null;
       const image=clip?.image||a.walk;
-      const imageReady=a.ready&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0;
+      const imageReady=!!image&&(hd?!!clip?.ready:a.ready)&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0;
       if(imageReady){
         const fw=clip?.frameW||a.frameW||64, fh=clip?.frameHeight||clip?.frameH||a.frameH||64, cols=clip?.frames||a.cols||6;
         const row=(a.directions&&a.directions[facing]!=null)?a.directions[facing]:0;
