@@ -1,7 +1,7 @@
 'use strict';
 (()=>{
-  const root=document.getElementById('jrpg-polish');
-  if(!root)return;
+  const roots=[document.getElementById('jrpg-polish'),document.getElementById('classic-ui')].filter(Boolean);
+  if(!roots.length)return;
 
   const style=document.createElement('style');
   style.textContent=`
@@ -17,7 +17,7 @@
   let gesture=null;
   const threshold=12;
 
-  root.addEventListener('pointerdown',e=>{
+  for(const root of roots){root.addEventListener('pointerdown',e=>{
     if(e.__jpReplay)return;
     if(e.pointerType!=='touch'&&e.pointerType!=='pen')return;
     const button=e.target.closest('button');
@@ -41,11 +41,13 @@
       pointerType:e.pointerType||'touch',clientX:e.clientX,clientY:e.clientY,
       button:0,buttons:1,isPrimary:true
     });
-    Object.defineProperty(replay,'__jpReplay',{value:true});
-    g.target.dispatchEvent(replay);
+      Object.defineProperty(replay,'__jpReplay',{value:true});
+      window.SHClassicAudio?.play(/BACK|CANCEL|CLOSE|NO|FLEE/i.test(g.target.textContent||'')?'cancel':'confirm');
+      g.target.dispatchEvent(replay);
   },true);
 
   root.addEventListener('pointercancel',e=>{
     if(gesture&&e.pointerId===gesture.id)gesture=null;
   },true);
+  }
 })();
