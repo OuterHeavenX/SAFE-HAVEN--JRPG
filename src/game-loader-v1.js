@@ -1,10 +1,13 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260808-mobile1',false);
+  xhr.open('GET','src/game.js?v=20260808-chapter2',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
+  source=source.replaceAll("this.s.map==='town'","(this.s.map==='town'||this.s.map==='ashwatch')");
+  source=source.replaceAll("this.s.map==='world'","(this.s.map==='world'||this.s.map==='eastRoad')");
+  source=source.replaceAll("this.s.map==='cave'","(this.s.map==='cave'||this.s.map==='starfallRuins')");
 
   source=source.replace("function person(x,y,kind='kael',frame=0,scale=1.2){",`function person(x,y,kind='kael',frame=0,scale=1.2){
     if(kind==='kael'&&window.KaelLevel01&&window.KaelLevel01.walk){
