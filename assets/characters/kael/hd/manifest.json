@@ -1,0 +1,397 @@
+{
+  "schemaVersion": 1,
+  "character": "kael",
+  "standard": "safehaven-hd-pixel-v1",
+  "animations": {
+    "idle_down": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/idle/idle_down.png",
+      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_down_%02d.png"
+    },
+    "walk_down": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/walk/walk_down.png",
+      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_down_%02d.png"
+    },
+    "run_down": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/run/run_down.png",
+      "framePattern": "assets/characters/kael/hd/overworld/run/run_down_%02d.png"
+    },
+    "idle_left": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/idle/idle_left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_left_%02d.png"
+    },
+    "walk_left": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/walk/walk_left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_left_%02d.png"
+    },
+    "run_left": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/run/run_left.png",
+      "framePattern": "assets/characters/kael/hd/overworld/run/run_left_%02d.png"
+    },
+    "idle_right": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/idle/idle_right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_right_%02d.png"
+    },
+    "walk_right": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/walk/walk_right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_right_%02d.png"
+    },
+    "run_right": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/run/run_right.png",
+      "framePattern": "assets/characters/kael/hd/overworld/run/run_right_%02d.png"
+    },
+    "idle_up": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 1,
+      "fps": 1,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/idle/idle_up.png",
+      "framePattern": "assets/characters/kael/hd/overworld/idle/idle_up_%02d.png"
+    },
+    "walk_up": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 10,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/walk/walk_up.png",
+      "framePattern": "assets/characters/kael/hd/overworld/walk/walk_up_%02d.png"
+    },
+    "run_up": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 8,
+      "fps": 12,
+      "loop": true,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/run/run_up.png",
+      "framePattern": "assets/characters/kael/hd/overworld/run/run_up_%02d.png"
+    },
+    "interact": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/interact.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/interact_%02d.png"
+    },
+    "item_pickup": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/item_pickup.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/item_pickup_%02d.png"
+    },
+    "surprised": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/surprised.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/surprised_%02d.png"
+    },
+    "hurt": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/hurt.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/hurt_%02d.png"
+    },
+    "kneel": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/kneel.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/kneel_%02d.png"
+    },
+    "sword_draw": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/sword_draw.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/sword_draw_%02d.png"
+    },
+    "sword_sheathe": {
+      "frameWidth": 64,
+      "frameHeight": 80,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 32,
+        "y": 78
+      },
+      "sheet": "assets/characters/kael/hd/overworld/actions/sword_sheathe.png",
+      "framePattern": "assets/characters/kael/hd/overworld/actions/sword_sheathe_%02d.png"
+    },
+    "battle_idle": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 6,
+      "fps": 6,
+      "loop": true,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/idle/battle_idle.png",
+      "framePattern": "assets/characters/kael/hd/battle/idle/battle_idle_%02d.png"
+    },
+    "battle_ready": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 6,
+      "fps": 8,
+      "loop": true,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/ready/battle_ready.png",
+      "framePattern": "assets/characters/kael/hd/battle/ready/battle_ready_%02d.png"
+    },
+    "heavy_attack": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 12,
+      "fps": 12,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/heavy_attack/heavy_attack.png",
+      "framePattern": "assets/characters/kael/hd/battle/heavy_attack/heavy_attack_%02d.png"
+    },
+    "magic": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 10,
+      "fps": 12,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/magic/magic.png",
+      "framePattern": "assets/characters/kael/hd/battle/magic/magic_%02d.png"
+    },
+    "defend": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 6,
+      "fps": 8,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/defend/defend.png",
+      "framePattern": "assets/characters/kael/hd/battle/defend/defend_%02d.png"
+    },
+    "attack": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 10,
+      "fps": 14,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/attack/attack.png",
+      "framePattern": "assets/characters/kael/hd/battle/attack/attack_%02d.png"
+    },
+    "battle_hurt": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 6,
+      "fps": 12,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/hurt/battle_hurt.png",
+      "framePattern": "assets/characters/kael/hd/battle/hurt/battle_hurt_%02d.png"
+    },
+    "critical": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 6,
+      "fps": 6,
+      "loop": true,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/critical/critical.png",
+      "framePattern": "assets/characters/kael/hd/battle/critical/critical_%02d.png"
+    },
+    "victory": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 12,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/victory/victory.png",
+      "framePattern": "assets/characters/kael/hd/battle/victory/victory_%02d.png"
+    },
+    "levelup": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 16,
+      "fps": 12,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/levelup/levelup.png",
+      "framePattern": "assets/characters/kael/hd/battle/levelup/levelup_%02d.png"
+    },
+    "ko": {
+      "frameWidth": 128,
+      "frameHeight": 160,
+      "frames": 10,
+      "fps": 10,
+      "loop": false,
+      "anchor": {
+        "x": 64,
+        "y": 158
+      },
+      "sheet": "assets/characters/kael/hd/battle/ko/ko.png",
+      "framePattern": "assets/characters/kael/hd/battle/ko/ko_%02d.png"
+    }
+  }
+}
