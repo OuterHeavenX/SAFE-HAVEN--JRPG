@@ -1,8 +1,5 @@
 'use strict';
 (() => {
-  // Robust Kael Level-01 sprite system
-  // Async loading • idle/walk • shared draw helper for overworld + battle
-
   const asset = {
     walk: null,
     ready: false,
@@ -11,7 +8,6 @@
     frameH: 64,
     cols: 6,
     rows: 4,
-    // spritesheet row order: down, left, right, up
     directions: { down: 0, left: 1, right: 2, up: 3 }
   };
 
@@ -38,7 +34,7 @@
 
   async function loadBase64Sheet() {
     try {
-      const res = await fetch('assets/sprites/kael/level-01/walk-base64.txt?v=20260813-kael');
+      const res = await fetch('assets/sprites/kael/level-01/walk-base64.txt?v=20260813-kael2');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const b64 = (await res.text()).trim();
       if (!b64 || b64.length < 100) throw new Error('Empty or invalid base64 payload');
@@ -51,8 +47,7 @@
 
   async function init() {
     try {
-      // Prefer a real PNG if you ever add one
-      const png = await loadImage('assets/sprites/kael/level-01/walk.png?v=20260813-kael');
+      const png = await loadImage('assets/sprites/kael/level-01/walk.png?v=20260813-kael2');
       markReady(png);
       return;
     } catch (_) {}
@@ -60,11 +55,9 @@
   }
 
   /**
-   * Shared draw helper – used by both overworld and battle
-   * @param {CanvasRenderingContext2D} ctx
-   * @param {number} x center x
-   * @param {number} y feet y
-   * @param {object} opts
+   * Shared draw helper
+   * - No extra shadow (sprite already has one)
+   * - When not moving → always frame 0 (idle)
    */
   function draw(ctx, x, y, opts = {}) {
     const facing = opts.facing || 'down';
@@ -81,18 +74,17 @@
       const fh = asset.frameH;
       const cols = asset.cols;
       const row = (asset.directions[facing] != null) ? asset.directions[facing] : 0;
-      const frame = moving ? (Math.floor(time / 95) % cols) : 0; // idle = frame 0
+
+      // Idle = frame 0, walk = cycle
+      const frame = moving ? (Math.floor(time / 95) % cols) : 0;
+
       const dw = Math.round(82 * scale);
       const dh = Math.round(82 * scale);
 
       ctx.save();
       ctx.imageSmoothingEnabled = false;
 
-      // soft shadow
-      ctx.fillStyle = 'rgba(0,0,0,0.28)';
-      ctx.beginPath();
-      ctx.ellipse(x, y + 2, dw * 0.32, 6, 0, 0, Math.PI * 2);
-      ctx.fill();
+      // NOTE: No extra shadow — the sprite already contains one
 
       ctx.drawImage(
         img,
@@ -105,7 +97,7 @@
       return true;
     }
 
-    // Fallback procedural Kael
+    // Procedural fallback (only if sprite fails)
     const s = scale;
     const b = bob;
     ctx.fillStyle = 'rgba(0,0,0,0.28)';
