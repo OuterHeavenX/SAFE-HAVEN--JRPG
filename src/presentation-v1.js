@@ -54,20 +54,16 @@ function enemyArt(e,x,y,t){
 }
 function kaelBattle(x, y, t) {
   const a = window.KaelLevel01;
-
-  // Prefer the new shared draw helper
   if (a && typeof a.draw === 'function') {
     a.draw(ctx, x, y, {
-      facing: 'left',          // Kael faces the enemies
-      moving: false,           // idle in battle (can change later)
+      facing: 'left',
+      moving: false,
       scale: 1.7,
       bob: Math.sin(t * 4) * 1.5,
       time: t * 1000
     });
     return;
   }
-
-  // Old fallback (kept for safety)
   const image = a?.walk;
   if (a && image && a.ready && image.complete && image.naturalWidth > 0) {
     const fw = a.frameW || 64, fh = a.frameH || 64;
@@ -83,8 +79,6 @@ function kaelBattle(x, y, t) {
     ctx.restore();
     return;
   }
-
-  // Final procedural fallback
   ctx.save();
   ctx.translate(x, y + Math.sin(t * 5) * 2);
   ellipse(0, 35, 24, 6, 'rgba(0,0,0,.28)');
@@ -95,6 +89,20 @@ function kaelBattle(x, y, t) {
   px(3, 24, 8, 12, '#6d3d2f');
   ctx.restore();
 }
+function burst(x,y,color='#ffe58a'){for(let i=0;i<10;i++){const a=TAU*i/10;fx.push({x,y,vx:Math.cos(a)*rand(50,120),vy:Math.sin(a)*rand(50,120),life:.45,color,size:rand(2,5)});}}
+SH.Battle=class extends OriginalBattle{
+ constructor(g,ids){super(g,ids);game=g;battle=this;victory=null;const oldEnd=g.endBattle.bind(g);if(!g.__presentationWrapped){g.endBattle=(win,fled)=>{if(win&&!fled&&battle){victory={text:battle.message,t:performance.now()/1000,life:.85};}setTimeout(()=>{battle=null;},950);return oldEnd(win,fled)};g.__presentationWrapped=true;}}
+ hit(e,magic){const before=e.hp;super.hit(e,magic);const dmg=Math.max(0,before-e.hp);const x=175+e.index*125,y=210;shake=magic?7:4;burst(x,y,magic?'#ff9e58':'#ffe58a');fx.push({text:`-${dmg}`,x,y:y-38,life:.8,color:magic?'#ffb16d':'#fff2a6',vy:-35});if(magic){for(let i=0;i<9;i++)fx.push({x:x+rand(-25,25),y:y+rand(-5,25),vx:rand(-20,20),vy:rand(-120,-60),life:rand(.35,.65),color:'#ff7b43',size:rand(3,7)});}}
+ enemyTurn(){const hp=game?.s?.player?.hp||0;super.enemyTurn();const dmg=Math.max(0,hp-(game?.s?.player?.hp||0));if(dmg){shake=6;burst(745,235,'#ff7d7d');fx.push({text:`-${dmg}`,x:745,y:188,life:.8,color:'#ff9b9b',vy:-30});}}
+ victory(){super.victory();victory={text:this.message,t:performance.now()/1000,life:1.25};for(let i=0;i<28;i++)fx.push({x:480+rand(-170,170),y:260+rand(-35,35),vx:rand(-35,35),vy:rand(-100,-35),life:rand(.7,1.3),color:['#ffe88a','#9fe1ff','#f5b1ff'][i%3],size:rand(2,6)});}
+};
+let last=performance.now();
+function overlay(now){const dt=Math.min(.04,(now-last)/1000);last=now;if(battle&&game&&game.mode==='battle'){
+ ctx.save();if(shake>0){shake=Math.max(0,shake-dt*28);ctx.translate(rand(-shake,shake),rand(-shake,shake));}
+ const t=now/1000;battle.enemies.forEach((e,i)=>{if(e.hp>0)enemyArt(e,175+i*125,245,t);});kaelBattle(745,240,t);
+ for(const f of fx){if(f.text){txt(f.text,f.x,f.y,24,f.color);f.y+=(f.vy||0)*dt;}else{ellipse(f.x,f.y,f.size||3,f.size||3,f.color);f.x+=(f.vx||0)*dt;f.y+=(f.vy||0)*dt;}f.life-=dt;}fx=fx.filter(f=>f.life>0);
+ if(victory&&victory.life>0){const a=Math.min(1,victory.life*3);ctx.globalAlpha=a;ctx.fillStyle='rgba(7,8,24,.86)';BaseFill.call(ctx,285,205,390,126);ctx.strokeStyle='#e2c66e';ctx.lineWidth=3;ctx.strokeRect(292,212,376,112);txt('VICTORY!',480,244,32,'#ffe58a');txt(victory.text.replace('VICTORY! ',' '),480,292,17,'#fff2cf');victory.life-=dt;ctx.globalAlpha=1;}
+ ctx.restore();
  }
  requestAnimationFrame(overlay);
 }
