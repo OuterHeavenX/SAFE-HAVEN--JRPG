@@ -14,12 +14,12 @@
       if(typeof a.draw==='function'){
         const facing=window.KaelFacing||'down';
         const moving=!!window.KaelIsMoving;
-        a.draw(ctx,x,y,{
-          facing:facing,
-          moving:moving,
-          scale:scale,
-          bob:0,
-          time:performance.now()
+        a.draw(ctx, x, y, {
+          state: moving ? 'walk' : 'idle',
+          facing: facing,
+          moving: moving,
+          scale: scale,
+          time: performance.now()
         });
         return;
       }
