@@ -55,12 +55,15 @@ function enemyArt(e,x,y,t){
 function kaelBattle(x, y, t) {
   const a = window.KaelLevel01;
   if (a && typeof a.draw === 'function') {
+    const facing = 'left';
+    const moving = false;
+    const scale = 1.7;
     a.draw(ctx, x, y, {
-      facing: 'left',
-      moving: false,
-      scale: 1.7,
-      bob: Math.sin(t * 4) * 1.5,
-      time: t * 1000
+      state: moving ? 'walk' : 'idle',
+      facing: facing,
+      moving: moving,
+      scale: scale,
+      time: performance.now()
     });
     return;
   }
