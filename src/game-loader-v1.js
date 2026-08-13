@@ -1,29 +1,47 @@
 'use strict';
 (()=>{
   const xhr=new XMLHttpRequest();
-  xhr.open('GET','src/game.js?v=20260807-1554',false);
+  xhr.open('GET','src/game.js?v=20260813-kael',false);
   xhr.send(null);
   if(xhr.status<200||xhr.status>=300)throw new Error('Unable to load game core: '+xhr.status);
   let source=xhr.responseText;
 
+  // Prefer the shared KaelLevel01.draw() helper when available.
+  // Falls back to the original inline drawImage path, then to procedural Kael.
   source=source.replace("function person(x,y,kind='kael',frame=0,scale=1.2){",`function person(x,y,kind='kael',frame=0,scale=1.2){
-    if(kind==='kael'&&window.KaelLevel01&&window.KaelLevel01.walk){
-      const a=window.KaelLevel01, image=a.walk;
-      const imageReady=a.ready&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0;
-      if(imageReady){
-        const fw=a.frameW||64, fh=a.frameH||64, cols=a.cols||6;
+    if(kind==='kael'&&window.KaelLevel01){
+      const a=window.KaelLevel01;
+      if(typeof a.draw==='function'){
         const facing=window.KaelFacing||'down';
-        const row=(a.directions&&a.directions[facing]!=null)?a.directions[facing]:0;
         const moving=!!window.KaelIsMoving;
-        const f=moving?(Math.floor(performance.now()/95)%cols):0;
-        const dw=82*scale, dh=82*scale;
-        try{
-          ctx.save();ctx.imageSmoothingEnabled=false;
-          ctx.drawImage(image,f*fw,row*fh,fw,fh,Math.round(x-dw/2),Math.round(y-dh*.55),Math.round(dw),Math.round(dh));
-          ctx.restore();return;
-        }catch(spriteError){
-          try{ctx.restore();}catch(_restoreError){}
-          if(!a.drawFailedLogged){a.drawFailedLogged=true;console.warn('Kael sprite unavailable; using safe fallback.',spriteError);}
+        a.draw(ctx,x,y,{
+          facing:facing,
+          moving:moving,
+          scale:scale,
+          bob:0,
+          time:performance.now()
+        });
+        return;
+      }
+      // Legacy path if draw helper is missing but image exists
+      if(a.walk){
+        const image=a.walk;
+        const imageReady=a.ready&&image.complete&&image.naturalWidth>0&&image.naturalHeight>0;
+        if(imageReady){
+          const fw=a.frameW||64, fh=a.frameH||64, cols=a.cols||6;
+          const facing=window.KaelFacing||'down';
+          const row=(a.directions&&a.directions[facing]!=null)?a.directions[facing]:0;
+          const moving=!!window.KaelIsMoving;
+          const f=moving?(Math.floor(performance.now()/95)%cols):0;
+          const dw=82*scale, dh=82*scale;
+          try{
+            ctx.save();ctx.imageSmoothingEnabled=false;
+            ctx.drawImage(image,f*fw,row*fh,fw,fh,Math.round(x-dw/2),Math.round(y-dh*.55),Math.round(dw),Math.round(dh));
+            ctx.restore();return;
+          }catch(spriteError){
+            try{ctx.restore();}catch(_restoreError){}
+            if(!a.drawFailedLogged){a.drawFailedLogged=true;console.warn('Kael sprite unavailable; using safe fallback.',spriteError);}
+          }
         }
       }
     }`);
